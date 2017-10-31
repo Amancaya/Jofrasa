@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -26,13 +29,22 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
     private GoogleApiClient googleApiClient;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+
+    //edit text
+    private EditText name, last_name, phone, nit, address;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registry);
 
         photoImageView = (ImageView) findViewById(R.id.photoUser);
-        userEmail = (TextView) findViewById(R.id.userEmail);
+        userEmail = (TextView)findViewById(R.id.userEmail);
+        name = (EditText)findViewById(R.id.edt_name);
+        last_name = (EditText) findViewById(R.id.edt_last_name);
+        phone = (EditText) findViewById(R.id.edt_phone);
+        nit = (EditText) findViewById(R.id.edt_nit);
+        address = (EditText) findViewById(R.id.edt_address);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -77,4 +89,27 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
 
     }
 
+
+    //class validation
+    public abstract class TextValidator implements TextWatcher {
+        private final EditText editText;
+
+        public TextValidator(EditText editText) {
+            this.editText = editText;
+        }
+
+        public abstract void validate(EditText editText, String text);
+
+        @Override
+        final public void afterTextChanged(Editable s) {
+            String text = editText.getText().toString();
+            validate(editText, text);
+        }
+
+        @Override
+        final public void beforeTextChanged(CharSequence s, int start, int count, int after) { /* Don't care */ }
+
+        @Override
+        final public void onTextChanged(CharSequence s, int start, int before, int count) { /* Don't care */ }
+    }
 }

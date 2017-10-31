@@ -19,7 +19,7 @@
 
     <style name="editTextWhite" parent="TextAppearance.AppCompat">
         <item name="android:textColorHint">@color/colorAccent</item>
-        <item name="android:textSize">20dp</item>
+        <item name="android:textSize">16dp</item>
         <item name="android:textColorPrimary">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="colorControlNormal">@color/colorAccent</item>
