@@ -27,7 +27,7 @@ import java.util.List;
 import free.tech.jofrasa.Adapters.AdapterPager;
 import free.tech.jofrasa.Interface.SendView;
 import free.tech.jofrasa.Model.Provider;
-import free.tech.jofrasa.MySearchView;
+import free.tech.jofrasa.ExtraClass.MySearchView;
 import free.tech.jofrasa.Nav_central;
 import free.tech.jofrasa.R;
 

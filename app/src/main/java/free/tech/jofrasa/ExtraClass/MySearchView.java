@@ -1,4 +1,4 @@
-package free.tech.jofrasa;
+package free.tech.jofrasa.ExtraClass;
 
 import android.app.Activity;
 import android.support.v4.app.Fragment;
@@ -6,6 +6,8 @@ import android.support.v7.widget.SearchView;
 import android.util.Log;
 
 import java.util.List;
+
+import free.tech.jofrasa.Nav_central;
 
 /**
  * Created by root on 30-10-17.

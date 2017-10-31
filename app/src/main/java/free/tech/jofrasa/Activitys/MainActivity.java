@@ -21,7 +21,7 @@ import com.andremion.counterfab.CounterFab;
 
 
 import free.tech.jofrasa.Interface.SendView;
-import free.tech.jofrasa.MySearchView;
+import free.tech.jofrasa.ExtraClass.MySearchView;
 import free.tech.jofrasa.Nav_central;
 import free.tech.jofrasa.R;
 
