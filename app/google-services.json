@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "751249635843",
+    "firebase_url": "https://jofrasaapp.firebaseio.com",
+    "project_id": "jofrasaapp",
+    "storage_bucket": "jofrasaapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:751249635843:android:d34a2e8aa6424763",
+        "android_client_info": {
+          "package_name": "free.tech.jofrasa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "751249635843-ra26r2ag1si8sifarg05ubd16fhb0ppl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "free.tech.jofrasa",
+            "certificate_hash": "2754c6e2ae911139de6cab3ff6945a46530f5e83"
+          }
+        },
+        {
+          "client_id": "751249635843-h9iekut7lf8sh928tm54cae3vjltc22k.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB2ERLA5cIWY7_cVZ3mAB_WyP9c4YNe9Ko"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "751249635843-h9iekut7lf8sh928tm54cae3vjltc22k.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
