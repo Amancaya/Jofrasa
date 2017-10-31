@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -33,6 +35,9 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
     //edit text
     private EditText name, last_name, phone, nit, address;
 
+    //btn
+    private Button btnSubmit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +50,8 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
         phone = (EditText) findViewById(R.id.edt_phone);
         nit = (EditText) findViewById(R.id.edt_nit);
         address = (EditText) findViewById(R.id.edt_address);
+        //button submit
+        btnSubmit = (Button) findViewById(R.id.btn_submit);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
@@ -54,6 +61,17 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
                 .enableAutoManage(this,  this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
+
+        //function to send data registry
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(RegistryActivity.this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            }
+        });
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseAuthListener = new FirebaseAuth.AuthStateListener() {
