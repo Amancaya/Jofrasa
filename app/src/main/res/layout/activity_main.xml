@@ -11,29 +11,28 @@
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/AppTheme.PopupOverlay" >
+            android:layout_height="wrap_content">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_show_navigation"
-                android:tint="@color/icons"/>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:popupTheme="@style/AppTheme.PopupOverlay" >
 
-            <TextView
-                android:id="@+id/toolbar_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/title_app"
-                android:layout_gravity="center"
-                android:textSize="35sp"
-                android:textStyle="bold"/>
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/title_app"
+                    android:textSize="40sp"
+                    android:textStyle="bold"/>
 
-        </android.support.v7.widget.Toolbar>
+            </android.support.v7.widget.Toolbar>
+
+        </RelativeLayout>
 
     </android.support.design.widget.AppBarLayout>
 

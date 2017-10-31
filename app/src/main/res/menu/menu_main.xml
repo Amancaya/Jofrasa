@@ -8,11 +8,17 @@
         app:showAsAction="never"
         android:orderInCategory="100"/>
 
-    <item android:id="@+id/menu_search"
-        android:title="Calendar"
+    <item android:title="@string/outapp"
+        android:id="@+id/out"
+        app:showAsAction="never"
+        android:orderInCategory="100"/>
+
+    <item
+        android:id="@+id/action_search"
         android:icon="@drawable/ic_search"
         android:orderInCategory="100"
-        app:showAsAction="ifRoom"
+        android:title="@string/abc_search_hint"
+        app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"/>
 
 </menu>

@@ -6,4 +6,9 @@
     <string name="unity">Unidades</string>
     <string name="pesos">Bs</string>
     <string name="logout">Cerrar sesion</string>
+    <string name="outapp">Salir</string>
+    <string name="add_purchase">Añadir</string>
+    <string name="title_detail">Detalle de compra</string>
+    <string name="units_products">Productos unitarios</string>
+    <string name="button_purchase">Enviar Solicitud</string>
 </resources>

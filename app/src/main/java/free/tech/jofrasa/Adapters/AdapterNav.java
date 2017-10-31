@@ -9,8 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import free.tech.jofrasa.Activitys.ProductsActivity;
@@ -99,6 +101,16 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         }
     }
 
+    public void setFilter(List<item> itemFilter) {
+        itemList = new ArrayList<>();
+        itemList.addAll(itemFilter);
+        notifyDataSetChanged();
+    }
+
+    public List<item> getItemList(){
+        return itemList;
+    }
+
     private static class ProviderHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView imageView;
         Activity activity;
@@ -126,7 +138,8 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     }
 
     private static class ProductHolder extends RecyclerView.ViewHolder{
-        ImageView image, button_car;
+        ImageView image;
+        LinearLayout button_car;
         TextView title, price, count;
         Producto producto;
         public ProductHolder(View itemView, Activity activity) {
@@ -143,13 +156,13 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
             image.setImageResource(producto.getPhoto());
             title.setText(producto.getProduct_name());
             if (producto.getPackage_price() == 0){
-                count.setVisibility(View.INVISIBLE);
-                price.append(String.valueOf(producto.getPrice()));
+                count.setVisibility(View.GONE);
+                price.setText("Bs"+String.valueOf(producto.getPrice()));
             }
             else {
-                price.append(String.valueOf(producto.getPackage_price()));
+                price.setText("Bs"+String.valueOf(producto.getPackage_price()));
                 count.setVisibility(View.VISIBLE);
-                count.append(String.valueOf(producto.getPackage_quantity()));
+                count.setText(String.valueOf(producto.getPackage_quantity()));
             }
         }
     }

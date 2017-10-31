@@ -3,7 +3,6 @@ package free.tech.jofrasa.Adapters;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.util.Log;
 
 import java.util.List;
 
@@ -12,8 +11,8 @@ import java.util.List;
  */
 
 public class AdapterPager extends FragmentPagerAdapter {
-    List<Fragment> fragments = null;
-    String[] title = null;
+    private List<Fragment> fragments = null;
+    private String[] title = null;
 
     public AdapterPager(FragmentManager fm, List<Fragment> fragments, String[] title) {
         super(fm);
