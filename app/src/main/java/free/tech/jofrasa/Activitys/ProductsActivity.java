@@ -14,11 +14,10 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.Menu;
-import android.widget.EditText;
+import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 
 import com.andremion.counterfab.CounterFab;
 
@@ -26,11 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import free.tech.jofrasa.Adapters.AdapterPager;
+import free.tech.jofrasa.Interface.SendView;
 import free.tech.jofrasa.Model.Provider;
+import free.tech.jofrasa.ExtraClass.MySearchView;
 import free.tech.jofrasa.Nav_central;
 import free.tech.jofrasa.R;
 
-public class ProductsActivity extends AppCompatActivity {
+public class ProductsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, TabLayout.OnTabSelectedListener {
 
     private static final String TAG = "ProductsActivity";
     private static final String PROD_NAME = "name";
@@ -42,11 +43,15 @@ public class ProductsActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private CounterFab counterFab;
     private List<Fragment> fragmentList;
-    private String[] labels = {Nav_central.PRODUCT_UNIQUE, Nav_central.PRODUCT_PACKAGE};;
-    private EditText editText;
-    private RelativeLayout relativeLayout;
+    private MySearchView searchView;
+    private MenuItem searchItem;
+    private SendView sendView;
+    private String[] labels = {Nav_central.PRODUCT_UNIQUE, Nav_central.PRODUCT_PACKAGE};
+    private Nav_central currentFragment;
+    private int currentPosition = 0;
+    private AdapterPager adapterPager;
+
     public static void createInstance(Activity activity, Provider provider){
-        Log.e("ProductsActivity", "createInstance");
         Intent intent = getLaunchIntent(activity, provider)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP| Intent.FLAG_ACTIVITY_SINGLE_TOP);
         ActivityOptionsCompat activityOptionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,
@@ -55,12 +60,12 @@ public class ProductsActivity extends AppCompatActivity {
     }
 
     public static Intent getLaunchIntent(Activity activity, Provider provider){
-        Log.e("ProductsActivity", "getLaunchIntent");
         Intent intent = new Intent(activity, ProductsActivity.class);
         intent.putExtra(PROD_NAME, provider.getBrand());
         intent.putExtra(PROD_PICTURE, provider.getImage());
         return intent;
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,10 +73,28 @@ public class ProductsActivity extends AppCompatActivity {
         getData();
         getSupportActionBar().setTitle(provider.getBrand());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        fragmentList = new ArrayList<>();
         initCollapsingToolbar();
+        currentFragment = (Nav_central) fragmentList.get(0);
         counterFab = (CounterFab) findViewById(R.id.fab_product);
         imageView = (ImageView) findViewById(R.id.image);
         imageView.setImageResource(provider.getImage());
+
+        counterFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplication(), ShoppingCartActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        tabLayout.setOnTabSelectedListener(this);
+    }
+
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+        sendView = (SendView) fragment;
     }
 
     @Override
@@ -80,15 +103,29 @@ public class ProductsActivity extends AppCompatActivity {
         fragmentList.clear();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
+        searchItem = menu.findItem(R.id.action_search);
+
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
-        // Assumes current activity is the searchable activity
+        searchView = new MySearchView(this, fragmentList);
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setOnQueryTextListener(this);
         searchView.setIconifiedByDefault(true);
+        searchItem.setActionView(searchView);
+        searchView.SetPosition(currentPosition);
+
+        ImageView closeButton = searchView.findViewById(R.id.search_close_btn);
+
+        closeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+               // CloseSearchView();
+            }
+        });
         return true;
     }
 
@@ -128,11 +165,10 @@ public class ProductsActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.pager);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
-        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
+        tabLayout.setTabMode(TabLayout.GRAVITY_CENTER);
         tabLayout.setTabTextColors(Color.GRAY, getResources().getColor(R.color.colorAccent));
         tabLayout.setSelectedTabIndicatorColor(getResources().getColor(R.color.colorAccent));
         tabLayout.setBackgroundColor(getResources().getColor(R.color.icons));
-
 
         viewPager.setOffscreenPageLimit(2);
         LoadPagers(viewPager);
@@ -140,11 +176,48 @@ public class ProductsActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
     }
     private void LoadPagers(ViewPager viewPager){
-        fragmentList = new ArrayList<>();
-        for (int i = 0; i< labels.length; i++){
-            fragmentList.add(Nav_central.createInstance(labels[i]));
+
+        for(int i = 0; i< labels.length; i++){
+            Nav_central nav_central = Nav_central.createInstance(labels[i]);
+            nav_central.setNav_central(nav_central);
+            fragmentList.add(nav_central);
         }
-        viewPager.setAdapter(new AdapterPager(getSupportFragmentManager(), fragmentList, labels));
+        adapterPager = new AdapterPager(getSupportFragmentManager(), fragmentList, labels);
+        viewPager.setAdapter(adapterPager);
     }
 
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        sendView = currentFragment;
+        if (currentFragment != null){
+           sendView.filter(currentFragment.getAdapterNavListItem(), newText, currentFragment);
+        }
+        return true;
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        currentFragment = (Nav_central) fragmentList.get(tab.getPosition());
+        currentPosition = tab.getPosition();
+        searchView.SetPosition(currentPosition);
+        if (searchView != null && searchItem != null){
+            searchView.clearFocus();
+            searchItem.collapseActionView();
+        }
+
+    }
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
+    }
 }

@@ -30,8 +30,6 @@
                 app:layout_collapseMode="parallax"
                 android:transitionName="MyTransition"/>
 
-
-
         </android.support.design.widget.CollapsingToolbarLayout>
 
     </android.support.design.widget.AppBarLayout>
@@ -57,7 +55,7 @@
             android:layout_alignParentTop="true"
             app:layout_scrollFlags="scroll|enterAlways"
             app:tabMode="scrollable"
-            android:layout_marginTop="35dp"/>
+            android:layout_marginTop="45dp"/>
     </RelativeLayout>
 
     <com.andremion.counterfab.CounterFab

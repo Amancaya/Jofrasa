@@ -18,4 +18,9 @@
     <string name="address">Dirección</string>
     <string name="phone">Celular o Telefono</string>
     <string name="registry">Registar</string>
+    <string name="outapp">Salir</string>
+    <string name="add_purchase">Añadir</string>
+    <string name="title_detail">Detalle de compra</string>
+    <string name="units_products">Productos unitarios</string>
+    <string name="button_purchase">Enviar Solicitud</string>
 </resources>
