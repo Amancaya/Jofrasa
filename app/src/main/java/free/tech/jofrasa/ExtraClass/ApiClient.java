@@ -11,7 +11,6 @@ public class ApiClient {
     public static final String BASE_URL = "http://grupo-ciencia.com/jofrasa/api/public/";
     private static Retrofit retrofit = null;
 
-
     public static Retrofit getClient() {
         if (retrofit==null) {
             retrofit = new Retrofit.Builder()
