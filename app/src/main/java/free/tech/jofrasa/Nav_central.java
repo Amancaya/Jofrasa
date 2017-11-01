@@ -18,7 +18,6 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -28,7 +27,7 @@ import dmax.dialog.SpotsDialog;
 import free.tech.jofrasa.Adapters.AdapterNav;
 import free.tech.jofrasa.ExtraClass.ApiClient;
 import free.tech.jofrasa.ExtraClass.ExtraFunctions;
-import free.tech.jofrasa.ExtraClass.Response;
+import free.tech.jofrasa.Response.ResponseProvider;
 import free.tech.jofrasa.Interface.ApiInterface;
 import free.tech.jofrasa.Interface.SendView;
 import free.tech.jofrasa.Model.Producto;
@@ -229,10 +228,10 @@ public class Nav_central extends Fragment implements SendView{
     //call provider
     private void LoadMainDataServer(){
         if (ExtraFunctions.Conexion(getActivity())){
-            final Call<Response> responseProvider = apiInterface.getProviderCall();
-            responseProvider.enqueue(new Callback<Response>() {
+            final Call<ResponseProvider> responseProvider = apiInterface.getProviderCall();
+            responseProvider.enqueue(new Callback<ResponseProvider>() {
                 @Override
-                public void onResponse(@NonNull Call<Response> call, @NonNull retrofit2.Response<Response> response) {
+                public void onResponse(@NonNull Call<ResponseProvider> call, @NonNull retrofit2.Response<ResponseProvider> response) {
                     controlThreadRetrofit++;
                     for (int i =0; i< response.body().getData().size(); i++){
                         Provider provider = response.body().getData().get(i);
@@ -242,7 +241,7 @@ public class Nav_central extends Fragment implements SendView{
                     ShowList();
                 }
                 @Override
-                public void onFailure(Call<Response> call, Throwable t) {
+                public void onFailure(Call<ResponseProvider> call, Throwable t) {
                     Log.e(TAG, t.getMessage());
                     Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_LONG).show();
                 }
