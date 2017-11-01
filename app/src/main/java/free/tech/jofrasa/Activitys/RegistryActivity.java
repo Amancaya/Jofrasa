@@ -47,9 +47,9 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
     private Button btnSubmit;
 
     //api Service
-
     private ApiInterface mApiService;
-
+    //model CLient
+    private  Client client;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +85,8 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
 //                Intent intent = new Intent(RegistryActivity.this, MainActivity.class);
 //                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
 //                startActivity(intent);
+                client = new Client();
+
                 String _name = name.getText().toString().trim();
                 String _surname = last_name.getText().toString().trim();
                 String _nit = nit.getText().toString().trim();
@@ -92,11 +94,21 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
                 String _email = userEmail.getText().toString().trim();
                 String _cell_number = phone.getText().toString().trim();
                 String _phone_number = phone.getText().toString().trim();
+
+                client.setName(_name);
+                client.setSurname(_surname);
+                client.setNit(_nit);
+                client.setAdress(_adress);
+                client.setEmail(_email);
+                client.setCellNumber(_cell_number);
+                client.setPhoneNumber(_phone_number);
+
+
                 if(!TextUtils.isEmpty(_name) && !TextUtils.isEmpty(_name) &&
                         !TextUtils.isEmpty(_surname) && !TextUtils.isEmpty(_nit) &&
                         !TextUtils.isEmpty(_email) && !TextUtils.isEmpty(_cell_number) &&
                         !TextUtils.isEmpty(_phone_number)){
-                    sendPost(_name,_surname,_nit,_email,_adress,_cell_number,_phone_number);
+                    sendPost(client);
                 }
 
             }
@@ -130,13 +142,15 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
         startActivity(intent);
     }
 
-    public void sendPost(String name, String surname, String nit,String email, String adress, String cell_number, String phone_number ) {
-        mApiService.savePost(name, surname, nit, email, adress, cell_number, phone_number).enqueue(new Callback<Client>() {
+    public void sendPost(Client client) {
+            mApiService.savePost(client).enqueue(new Callback<Client>() {
             @Override
             public void onResponse(Call<Client> call, Response<Client> response) {
 
                 if(response.isSuccessful()) {
                     //showResponse(response.body().toString());
+                    Log.i("REGISTRY ", "post submitted to API." + response.message().toString());
+                    Log.i("REGISTRY ", "post submitted to API." + response.toString());
                     Log.i("REGISTRY ", "post submitted to API." + response.body().toString());
                 }
             }

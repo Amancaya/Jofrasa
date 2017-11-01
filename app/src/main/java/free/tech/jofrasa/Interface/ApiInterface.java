@@ -2,6 +2,7 @@ package free.tech.jofrasa.Interface;
 
 import free.tech.jofrasa.ExtraClass.Model.Client;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -16,12 +17,13 @@ public interface ApiInterface {
 //    Call<HotelMessage> getHotelMessageCall();
 
     @POST("client/insertClient/")
-    @FormUrlEncoded
-    Call<Client> savePost(@Field("_name") String _name,
-                          @Field("_surname") String _surname,
-                          @Field("_nit") String _nit,
-                          @Field("_email") String _email,
-                          @Field("_adress") String _adress,
-                          @Field("_cell_number") String _cell_number,
-                          @Field("_phone_number") String _phone_number);
+    //@FormUrlEncoded
+    Call<Client> savePost(@Body Client client);
+//    Call<Client> savePost(@Field("_name") String _name,
+//                          @Field("_surname") String _surname,
+//                          @Field("_nit") String _nit,
+//                          @Field("_email") String _email,
+//                          @Field("_adress") String _adress,
+//                          @Field("_cell_number") String _cell_number,
+//                          @Field("_phone_number") String _phone_number);
 }
