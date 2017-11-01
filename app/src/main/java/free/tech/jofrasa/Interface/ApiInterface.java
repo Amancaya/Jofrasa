@@ -1,7 +1,7 @@
 package free.tech.jofrasa.Interface;
 
 import free.tech.jofrasa.ExtraClass.Model.Client;
-import free.tech.jofrasa.ExtraClass.Response;
+import free.tech.jofrasa.Response.ResponseProvider;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -15,10 +15,10 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
     @GET("provider/listProviders/")
-    Call<Response> getProviderCall();
+    Call<ResponseProvider> getProviderCall();
 
     @GET("provider/productsProvider/")
-    Call<Response> getProductCall(@Query("") int id);
+    Call<ResponseProvider> getProductCall(@Query("") int id);
 
     @POST("client/insertClient/")
     @FormUrlEncoded

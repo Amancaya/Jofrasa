@@ -1,4 +1,4 @@
-package free.tech.jofrasa.ExtraClass;
+package free.tech.jofrasa.Response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -6,13 +6,12 @@ import com.google.gson.annotations.SerializedName;
 import java.util.List;
 
 import free.tech.jofrasa.Model.Provider;
-import free.tech.jofrasa.Model.item;
 
 /**
  * Created by root on 01-11-17.
  */
 
-public class Response {
+public class ResponseProvider {
 
     @SerializedName("data")
     @Expose
