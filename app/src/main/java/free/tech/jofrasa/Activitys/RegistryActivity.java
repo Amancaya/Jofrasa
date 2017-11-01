@@ -5,7 +5,9 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +24,13 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Map;
 
+import free.tech.jofrasa.ExtraClass.ApiUtils;
+import free.tech.jofrasa.ExtraClass.Model.Client;
+import free.tech.jofrasa.Interface.ApiInterface;
 import free.tech.jofrasa.R;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RegistryActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
@@ -37,6 +45,10 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
 
     //btn
     private Button btnSubmit;
+
+    //api Service
+
+    private ApiInterface mApiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +65,7 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
         //button submit
         btnSubmit = (Button) findViewById(R.id.btn_submit);
 
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
@@ -62,14 +75,30 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
-        //function to send data registry
 
+        //instance post apiService
+        mApiService = ApiUtils.getAPIService();
+        //function to send data registry
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(RegistryActivity.this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(intent);
+//                Intent intent = new Intent(RegistryActivity.this, MainActivity.class);
+//                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+//                startActivity(intent);
+                String _name = name.getText().toString().trim();
+                String _surname = last_name.getText().toString().trim();
+                String _nit = nit.getText().toString().trim();
+                String _adress = address.getText().toString().trim();
+                String _email = userEmail.getText().toString().trim();
+                String _cell_number = phone.getText().toString().trim();
+                String _phone_number = phone.getText().toString().trim();
+                if(!TextUtils.isEmpty(_name) && !TextUtils.isEmpty(_name) &&
+                        !TextUtils.isEmpty(_surname) && !TextUtils.isEmpty(_nit) &&
+                        !TextUtils.isEmpty(_email) && !TextUtils.isEmpty(_cell_number) &&
+                        !TextUtils.isEmpty(_phone_number)){
+                    sendPost(_name,_surname,_nit,_email,_adress,_cell_number,_phone_number);
+                }
+
             }
         });
 
@@ -90,7 +119,6 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
     protected void onStart() {
         super.onStart();
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
-
     }
     private void setUserData(FirebaseUser user) {
         userEmail.setText(user.getEmail());
@@ -101,6 +129,25 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }
+
+    public void sendPost(String name, String surname, String nit,String email, String adress, String cell_number, String phone_number ) {
+        mApiService.savePost(name, surname, nit, email, adress, cell_number, phone_number).enqueue(new Callback<Client>() {
+            @Override
+            public void onResponse(Call<Client> call, Response<Client> response) {
+
+                if(response.isSuccessful()) {
+                    //showResponse(response.body().toString());
+                    Log.i("REGISTRY ", "post submitted to API." + response.body().toString());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Client> call, Throwable t) {
+                Log.e("REGISTRY ", "Unable to submit post to API.");
+            }
+        });
+    }
+
 
     @Override
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
