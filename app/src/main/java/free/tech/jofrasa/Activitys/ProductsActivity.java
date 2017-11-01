@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.andremion.counterfab.CounterFab;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +79,7 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
         currentFragment = (Nav_central) fragmentList.get(0);
         counterFab = (CounterFab) findViewById(R.id.fab_product);
         imageView = (ImageView) findViewById(R.id.image);
-        imageView.setImageResource(provider.getImage());
+        Glide.with(this).load(provider.getImage()).centerCrop().placeholder(R.drawable.paloma).into(imageView);
 
         counterFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,7 +160,7 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
     private void getData(){
         provider = new Provider();
         provider.setBrand(getIntent().getStringExtra(PROD_NAME));
-        provider.setImage(getIntent().getIntExtra(PROD_PICTURE, 0));
+        provider.setImage(getIntent().getStringExtra(PROD_PICTURE));
     }
     private void LoadTabViewPager(){
         viewPager = (ViewPager) findViewById(R.id.pager);
@@ -178,7 +179,7 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
     private void LoadPagers(ViewPager viewPager){
 
         for(int i = 0; i< labels.length; i++){
-            Nav_central nav_central = Nav_central.createInstance(labels[i]);
+            Nav_central nav_central = Nav_central.createInstance(labels[i], provider.getId());
             nav_central.setNav_central(nav_central);
             fragmentList.add(nav_central);
         }

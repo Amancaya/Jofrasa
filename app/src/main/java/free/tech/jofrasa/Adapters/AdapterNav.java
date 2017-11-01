@@ -12,6 +12,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -113,11 +115,13 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
 
     private static class ProviderHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView imageView;
+        TextView id_provider;
         Activity activity;
         private ItemclickListener listener;
         public ProviderHolder(View itemView, ItemclickListener listener, Activity activity) {
             super(itemView);
             imageView = itemView.findViewById(R.id.picture);
+            id_provider = itemView.findViewById(R.id.id_provider);
             this.listener = listener;
             this.activity = activity;
             itemView.setOnClickListener(this);
@@ -129,11 +133,8 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         }
 
         private void binData(Provider provider){
-           imageView.setImageBitmap(drawableToBitmap(provider.getImage()));
-        }
-
-        public Bitmap drawableToBitmap(int image){
-            return BitmapFactory.decodeResource(activity.getResources(), image);
+           id_provider.setText(String.valueOf(provider.getId()));
+           Glide.with(activity).load(provider.getImage()).centerCrop().into(imageView);
         }
     }
 
