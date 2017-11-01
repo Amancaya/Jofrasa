@@ -79,11 +79,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 hideKeyboard();
             }
         });
-
         return true;
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

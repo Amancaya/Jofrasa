@@ -15,20 +15,6 @@ import free.tech.jofrasa.Model.item;
 
 public class StaticData {
 
-    public static List<item> ListOfProviders(){
-        List<item> providerList = new ArrayList<>();
-        Provider provider = new Provider(1, R.drawable.paloma, "Paloma");
-        providerList.add(provider);
-        provider = new Provider(2, R.drawable.liz, "Liz");
-        providerList.add(provider);
-        provider = new Provider(3, R.drawable.ola, "Ola");
-        providerList.add(provider);
-        provider = new Provider(4, R.drawable.yacobs, "Yacobs");
-        providerList.add(provider);
-
-        return providerList;
-    }
-
     public static List<item> ListProduct(){
         List<item> itemList = new ArrayList<>();
         Producto producto = new Producto(1, "YACOBS Frutillas al Jugo 12x850g", 384, 12, R.drawable.yacobs_ciruela);
