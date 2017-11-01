@@ -23,4 +23,6 @@
     <string name="title_detail">Detalle de compra</string>
     <string name="units_products">Productos unitarios</string>
     <string name="button_purchase">Enviar Solicitud</string>
+    <string name="connection">Revise su conexión</string>
+    <string name="error">Error al cargar los datos</string>
 </resources>

@@ -1,38 +1,29 @@
 package free.tech.jofrasa.Model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * Created by root on 21-10-17.
  */
 
 public class Provider extends item{
-    private int id;
-    private int image;
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("brand")
+    @Expose
     private String brand;
+    @SerializedName("image")
+    @Expose
+    private String image;
 
-
-    public Provider() {
-    }
-
-    public Provider(int id, int image, String brand) {
-        this.id = id;
-        this.image = image;
-        this.brand = brand;
-    }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
-    }
-
-    public int getImage() {
-        return image;
-    }
-
-    public void setImage(int image) {
-        this.image = image;
     }
 
     public String getBrand() {
@@ -41,5 +32,13 @@ public class Provider extends item{
 
     public void setBrand(String brand) {
         this.brand = brand;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
