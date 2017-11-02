@@ -20,7 +20,7 @@ import android.widget.ImageView;
 import com.andremion.counterfab.CounterFab;
 
 
-import free.tech.jofrasa.Interface.SendView;
+import free.tech.jofrasa.Interface.MySendView;
 import free.tech.jofrasa.ExtraClass.MySearchView;
 import free.tech.jofrasa.Nav_central;
 import free.tech.jofrasa.R;
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     private static final String TAG = "Main";
     private Nav_central fragment;
-    SendView sendView;
+    MySendView mySendView;
     private SearchView searchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
-        sendView = (SendView) fragment;
+        mySendView = (MySendView) fragment;
     }
 
 
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onQueryTextChange(String newText) {
         if (fragment != null){
-            sendView.filter(fragment.getAdapterNavListItem(), newText, fragment);
+            mySendView.filter(fragment.getAdapterNavListItem(), newText, fragment);
         }
         return true;
     }

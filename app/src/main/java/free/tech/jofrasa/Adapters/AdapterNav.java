@@ -12,7 +12,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,7 +134,7 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
 
         private void binData(Provider provider){
            id_provider.setText(String.valueOf(provider.getId()));
-           Glide.with(activity).load(provider.getImage()).centerCrop().into(imageView);
+           Picasso.with(activity).load(provider.getImage()).into(imageView);
         }
     }
 
@@ -143,6 +143,7 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         LinearLayout button_car;
         TextView title, price, count;
         Producto producto;
+        Activity activity;
         public ProductHolder(View itemView, Activity activity) {
             super(itemView);
             image = itemView.findViewById(R.id.image);
@@ -150,20 +151,22 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
             title = itemView.findViewById(R.id.title);
             price = itemView.findViewById(R.id.price);
             count = itemView.findViewById(R.id.count);
+
+            this.activity = activity;
         }
 
         private void binData(Producto producto){
             this.producto = producto;
-            image.setImageResource(producto.getPhoto());
-            title.setText(producto.getProduct_name());
-            if (producto.getPackage_price() == 0){
+            Picasso.with(activity).load(producto.getPhoto()).into(image);
+            title.setText(producto.getProductName());
+            if (producto.getPackageQuantity() == 0){
                 count.setVisibility(View.GONE);
-                price.setText("Bs"+String.valueOf(producto.getPrice()));
+                price.setText("Bs "+String.valueOf(producto.getPrice()));
             }
             else {
-                price.setText("Bs"+String.valueOf(producto.getPackage_price()));
+                price.setText("Bs "+String.valueOf(producto.getPrice()));
                 count.setVisibility(View.VISIBLE);
-                count.setText(String.valueOf(producto.getPackage_quantity()));
+                count.setText(String.valueOf(producto.getPackageQuantity())+" Unidades");
             }
         }
     }

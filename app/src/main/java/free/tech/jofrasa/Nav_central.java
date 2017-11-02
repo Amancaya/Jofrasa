@@ -27,20 +27,22 @@ import dmax.dialog.SpotsDialog;
 import free.tech.jofrasa.Adapters.AdapterNav;
 import free.tech.jofrasa.ExtraClass.ApiClient;
 import free.tech.jofrasa.ExtraClass.ExtraFunctions;
+import free.tech.jofrasa.Response.ResponseProduct;
 import free.tech.jofrasa.Response.ResponseProvider;
 import free.tech.jofrasa.Interface.ApiInterface;
-import free.tech.jofrasa.Interface.SendView;
+import free.tech.jofrasa.Interface.MySendView;
 import free.tech.jofrasa.Model.Producto;
 import free.tech.jofrasa.Model.Provider;
 import free.tech.jofrasa.Model.item;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by root on 21-10-17.
  */
 
-public class Nav_central extends Fragment implements SendView{
+public class Nav_central extends Fragment implements MySendView {
     public static final String TAG = "Nav_central";
     public static final String TAG_ID = "Id_Provider";
     public static final String PRODUCT_UNIQUE = "Prod Unitarios";
@@ -49,7 +51,7 @@ public class Nav_central extends Fragment implements SendView{
 
     private RecyclerView recyclerView;
     private AdapterNav adapterNav;
-    private List<item> itemList, itemListPackageInitial, itemListMain, itemListUnique, itemListPackage;
+    private List<item> itemList, itemListMain, itemListUnique, itemListPackage;
     private Nav_central nav_central = null;
     private View rootView;
     private AlertDialog LoadDialog;
@@ -62,6 +64,7 @@ public class Nav_central extends Fragment implements SendView{
         Bundle bundle = new Bundle();
         bundle.putString(TAG, fragmentName);
         bundle.putInt(TAG_ID, idProvider);
+        Log.e(TAG, idProvider+"");
         nav_central.setArguments(bundle);
         return nav_central;
     }
@@ -78,8 +81,18 @@ public class Nav_central extends Fragment implements SendView{
         recyclerView = rootView.findViewById(R.id.recycler);
         recyclerView.setHasFixedSize(true);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        LoadMainDataServer();
+        LoadAllData();
         return rootView;
+    }
+
+    private void LoadAllData(){
+        switch (getArguments().getString(TAG)){
+            case MAIN:
+                LoadMainDataServer();
+                break;
+            default:
+                LoadProductDataServer(getArguments().getString(TAG));
+        }
     }
 
     //return actual nav_central
@@ -87,22 +100,15 @@ public class Nav_central extends Fragment implements SendView{
         this.nav_central = nav_central;
     }
 
-    private void LoadDatainRecycler(){
-        switch (getArguments().getString(TAG)){
+    private void LoadDatainRecycler(String key){
+        switch (key){
             case MAIN:
                 LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
                 recyclerView.setLayoutManager(layoutManager);
                 adapterNav = new AdapterNav(itemList, getActivity());
                 recyclerView.setAdapter(adapterNav);
                 break;
-            case PRODUCT_UNIQUE:
-                itemListUnique = itemList;
-                LoadRecycLerProduct();
-                adapterNav = new AdapterNav(itemList, getActivity());
-                recyclerView.setAdapter(adapterNav);
-                break;
-            case PRODUCT_PACKAGE:
-                itemListPackage = itemList;
+            default:
                 LoadRecycLerProduct();
                 adapterNav = new AdapterNav(itemList, getActivity());
                 recyclerView.setAdapter(adapterNav);
@@ -125,14 +131,19 @@ public class Nav_central extends Fragment implements SendView{
     //return old values
     public void returnToTheValues(){
         String key = nav_central.getArguments().getString(Nav_central.TAG);
-        adapterNav.CLear();
         if (nav_central == null || key.equals(MAIN)){
-            Log.e(TAG, itemList.toString());
+            adapterNav.CLear();
             adapterNav.addAll(itemListMain);
         }else {
             switch (key){
-                case PRODUCT_PACKAGE: adapterNav.addAll(itemListPackage);break;
-                case PRODUCT_UNIQUE: adapterNav.addAll(itemListUnique);break;
+                case PRODUCT_PACKAGE:
+                    adapterNav.CLear();
+                    adapterNav.addAll(itemListPackage);
+                    break;
+                case PRODUCT_UNIQUE:
+                    adapterNav.CLear();
+                    adapterNav.addAll(itemListUnique);
+                    break;
             }
         }
     }
@@ -203,7 +214,7 @@ public class Nav_central extends Fragment implements SendView{
             case PRODUCT_PACKAGE:
                 for (int i = 0; i < models.size(); i++) {
                     Producto producto = (Producto) models.get(i);
-                    final String text = producto.getProduct_name().toLowerCase();
+                    final String text = producto.getProductName().toLowerCase();
                     if (text.contains(query)) {
                         filteredModelList.add(producto);
                     }
@@ -213,7 +224,7 @@ public class Nav_central extends Fragment implements SendView{
                 Log.e(TAG, query);
                 for (int i = 0; i < models.size(); i++) {
                     Producto producto = (Producto) models.get(i);
-                    final String text = producto.getProduct_name().toLowerCase();
+                    final String text = producto.getProductName().toLowerCase();
                     if (text.contains(query)) {
                         filteredModelList.add(producto);
                     }
@@ -223,7 +234,6 @@ public class Nav_central extends Fragment implements SendView{
 
         return filteredModelList;
     }
-
     //call retrofit for data
     //call provider
     private void LoadMainDataServer(){
@@ -235,10 +245,10 @@ public class Nav_central extends Fragment implements SendView{
                     controlThreadRetrofit++;
                     for (int i =0; i< response.body().getData().size(); i++){
                         Provider provider = response.body().getData().get(i);
-                        Log.e(TAG, provider.getImage());
                         itemList.add(provider);
                     }
-                    ShowList();
+                    itemListMain = itemList;
+                    ShowList(MAIN);
                 }
                 @Override
                 public void onFailure(Call<ResponseProvider> call, Throwable t) {
@@ -251,12 +261,49 @@ public class Nav_central extends Fragment implements SendView{
         }
     }
 
-    private synchronized void ShowList(){
-        if (controlThreadRetrofit == 1) {
-            LoadDatainRecycler();
-            LoadDialog.dismiss();
+    private void LoadProductDataServer(final String key){
+        if (ExtraFunctions.Conexion(getActivity())){
+            Call<ResponseProduct> responseProductCall = apiInterface.getProductCall(idProvider);
+            Log.e(TAG, responseProductCall.request().toString());
+            responseProductCall.enqueue(new Callback<ResponseProduct>() {
+                @Override
+                public void onResponse(@NonNull Call<ResponseProduct> call, @NonNull Response<ResponseProduct> response) {
+                    controlThreadRetrofit++;
+                    switch (key){
+                        case PRODUCT_UNIQUE:
+                            for (int i = 0; i< response.body().getData().size(); i++){
+                                Producto producto = response.body().getData().get(i);
+                                if (producto.getPackageQuantity() == 0) itemList.add(producto);
+                            }
+                            itemListUnique = itemList;
+                            break;
+                        case PRODUCT_PACKAGE:
+                            for (int i = 0; i< response.body().getData().size(); i++){
+                                Producto producto = response.body().getData().get(i);
+                                if (producto.getPackageQuantity() != 0) itemList.add(producto);
+                            }
+                            itemListPackage = itemList;
+                            break;
+                    }
+
+                    ShowList(key);
+                }
+                @Override
+                public void onFailure(Call<ResponseProduct> call, Throwable t) {
+                    Log.e(TAG, t.getMessage());
+                    Toast.makeText(getActivity(), R.string.error, Toast.LENGTH_LONG).show();
+                }
+            });
+        }else {
+            Toast.makeText(getActivity(), R.string.connection, Toast.LENGTH_LONG).show();
         }
     }
 
+    private synchronized void ShowList(String key){
+        if (controlThreadRetrofit == 1) {
+            LoadDatainRecycler(key);
+            LoadDialog.dismiss();
+        }
+    }
 }
 
