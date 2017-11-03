@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import free.tech.jofrasa.Activitys.ProductsActivity;
+import free.tech.jofrasa.ExtraClass.ImageDialog;
 import free.tech.jofrasa.Interface.ItemclickListener;
 import free.tech.jofrasa.Model.Producto;
 import free.tech.jofrasa.Model.Provider;
@@ -70,7 +72,7 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                 viewHolder = new ProviderHolder(inflater.inflate(R.layout.item_nav, parent, false), this, activity);
                 break;
             case TYPE_PRODUCT:
-                viewHolder = new ProductHolder(inflater.inflate(R.layout.item_product, parent, false), activity);
+                viewHolder = new ProductHolder(inflater.inflate(R.layout.item_product, parent, false), activity, this);
                 break;
         }
 
@@ -98,7 +100,16 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
             case TYPE_PROVIDER:
                 ProductsActivity.createInstance(activity, (Provider)itemList.get(position)); break;
             case TYPE_PRODUCT:
-
+                switch (view.getId()){
+                    case R.id.image:
+                        Log.e("Adapter", "Imagen");
+                        Producto producto = (Producto) itemList.get(position);
+                        ImageDialog.newInstance(producto.getPhoto()).show(activity.getFragmentManager(), null);;
+                        break;
+                    case R.id.button_car:
+                        Log.e("Adapter", "button_car");
+                        break;
+                }
                 break;
         }
     }
@@ -138,13 +149,14 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         }
     }
 
-    private static class ProductHolder extends RecyclerView.ViewHolder{
+    private static class ProductHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         ImageView image;
         LinearLayout button_car;
         TextView title, price, count;
         Producto producto;
         Activity activity;
-        public ProductHolder(View itemView, Activity activity) {
+        ItemclickListener listener;
+        public ProductHolder(View itemView, Activity activity, ItemclickListener listener) {
             super(itemView);
             image = itemView.findViewById(R.id.image);
             button_car = itemView.findViewById(R.id.button_car);
@@ -152,8 +164,13 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
             price = itemView.findViewById(R.id.price);
             count = itemView.findViewById(R.id.count);
 
+            image.setOnClickListener(this);
+            button_car.setOnClickListener(this);
+
             this.activity = activity;
+            this.listener = listener;
         }
+
 
         private void binData(Producto producto){
             this.producto = producto;
@@ -168,6 +185,11 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                 count.setVisibility(View.VISIBLE);
                 count.setText(String.valueOf(producto.getPackageQuantity())+" Unidades");
             }
+        }
+
+        @Override
+        public void onClick(View view) {
+            listener.onItemClick(view, getAdapterPosition());
         }
     }
 }
