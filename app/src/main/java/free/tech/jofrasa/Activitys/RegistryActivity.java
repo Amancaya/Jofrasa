@@ -12,7 +12,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
@@ -35,10 +38,12 @@ import retrofit2.Response;
 public class RegistryActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener {
 
     private ImageView photoImageView;
+    private LinearLayout formRegistry;
     private TextView userEmail;
     private GoogleApiClient googleApiClient;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener firebaseAuthListener;
+    private ProgressBar progressBar;
 
     //edit text
     private EditText name, last_name, phone, nit, address;
@@ -49,21 +54,25 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
     //api Service
     private ApiInterface mApiService;
     //model CLient
-    private  Client client;
+    private Client client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registry);
 
         photoImageView = (ImageView) findViewById(R.id.photoUser);
-        userEmail = (TextView)findViewById(R.id.userEmail);
-        name = (EditText)findViewById(R.id.edt_name);
+        userEmail = (TextView) findViewById(R.id.userEmail);
+        name = (EditText) findViewById(R.id.edt_name);
         last_name = (EditText) findViewById(R.id.edt_last_name);
         phone = (EditText) findViewById(R.id.edt_phone);
         nit = (EditText) findViewById(R.id.edt_nit);
         address = (EditText) findViewById(R.id.edt_address);
         //button submit
         btnSubmit = (Button) findViewById(R.id.btn_submit);
+        //layout registry
+        formRegistry = (LinearLayout) findViewById(R.id.form_registry);
+        progressBar = (ProgressBar) findViewById(R.id.progressBar);
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -71,7 +80,7 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
                 .build();
 
         googleApiClient = new GoogleApiClient.Builder(this)
-                .enableAutoManage(this,  this)
+                .enableAutoManage(this, this)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
 
@@ -104,11 +113,12 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
                 client.setPhoneNumber(_phone_number);
 
 
-                if(!TextUtils.isEmpty(_name) && !TextUtils.isEmpty(_name) &&
+                if (!TextUtils.isEmpty(_name) && !TextUtils.isEmpty(_name) &&
                         !TextUtils.isEmpty(_surname) && !TextUtils.isEmpty(_nit) &&
                         !TextUtils.isEmpty(_email) && !TextUtils.isEmpty(_cell_number) &&
-                        !TextUtils.isEmpty(_phone_number)){
+                        !TextUtils.isEmpty(_phone_number)) {
                     sendPost(client);
+
                 }
 
             }
@@ -128,14 +138,19 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
             }
         };
     }
+
     protected void onStart() {
         super.onStart();
         firebaseAuth.addAuthStateListener(firebaseAuthListener);
     }
+
     private void setUserData(FirebaseUser user) {
         userEmail.setText(user.getEmail());
+        Log.i("REGISTRY ", " email data " + user.getEmail().toString().trim());
+        verifyEmail(user.getEmail());
         Glide.with(this).load(user.getPhotoUrl()).into(photoImageView);
     }
+
     private void goLogInScreen() {
         Intent intent = new Intent(this, RegistryActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -143,21 +158,54 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
     }
 
     public void sendPost(Client client) {
-            mApiService.savePost(client).enqueue(new Callback<Client>() {
+        progressBar.setVisibility(View.VISIBLE);
+        mApiService.savePost(client).enqueue(new Callback<Client>() {
             @Override
             public void onResponse(Call<Client> call, Response<Client> response) {
+                progressBar.setVisibility(View.GONE);
 
-                if(response.isSuccessful()) {
-                    //showResponse(response.body().toString());
-                    Log.i("REGISTRY ", "post submitted to API." + response.message().toString());
-                    Log.i("REGISTRY ", "post submitted to API." + response.toString());
-                    Log.i("REGISTRY ", "post submitted to API." + response.body().toString());
+                if (response.isSuccessful()) {
+                    Log.i("REGISTRY ", "post submitted to API." + response.body().getData());
+                    if (response.body().getData().equals("Usuario insertado correctamente")) {
+                        goMainScreen();
+                        Toast.makeText(getApplicationContext(),R.string.success_registry,Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(),R.string.error_registry,Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
 
             @Override
             public void onFailure(Call<Client> call, Throwable t) {
                 Log.e("REGISTRY ", "Unable to submit post to API.");
+            }
+        });
+    }
+
+    public void verifyEmail(String email) {
+        progressBar.setVisibility(View.VISIBLE);
+
+        mApiService.verifyEmail(email).enqueue(new Callback<Client>() {
+
+            @Override
+            public void onResponse(Call<Client> call, Response<Client> response) {
+                progressBar.setVisibility(View.GONE);
+
+                if (response.isSuccessful()) {
+                    if (response.body().getData().equals("Email no registrado")) {
+                        Log.i("REGISTRY ", "MOSTRAR REGISTRO" + response.body().getData());
+                        formRegistry.setVisibility(View.VISIBLE);
+                    } else {
+                        Log.i("REGISTRY ", "OCULTAR REGISTRO" + response.body().getData());
+                        goMainScreen();
+
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Client> call, Throwable t) {
+                Log.e("REGISTRY ", "Unable to submit get to API.");
             }
         });
     }
@@ -190,5 +238,11 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
 
         @Override
         final public void onTextChanged(CharSequence s, int start, int before, int count) { /* Don't care */ }
+    }
+
+    private void goMainScreen() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
