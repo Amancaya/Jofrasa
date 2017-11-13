@@ -69,6 +69,7 @@ public class QueryRealm {
     }
 
     public boolean DeleteData(int ID){
+        Log.e("Query", "DeleteData");
         RealmResults<Purchase> purchases = realm.where(Purchase.class).equalTo("idProduct", ID).findAll();
         return  purchases.deleteAllFromRealm();
     }

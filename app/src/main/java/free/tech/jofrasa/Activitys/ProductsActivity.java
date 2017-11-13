@@ -90,7 +90,6 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
         queryRealm = new QueryRealm(realm, this);
         currentFragment = (Nav_central) fragmentList.get(0);
         counterFab = (CounterFab) findViewById(R.id.fab_product);
-        counterFab.setCount(queryRealm.countCart());
         imageView = (ImageView) findViewById(R.id.image);
         Picasso.with(this).load(provider.getImage()).placeholder(R.drawable.paloma).into(imageView);
 
@@ -103,6 +102,12 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
         });
 
         tabLayout.setOnTabSelectedListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        counterFab.setCount(queryRealm.countCart());
     }
 
     @Override

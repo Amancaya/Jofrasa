@@ -29,6 +29,7 @@ import free.tech.jofrasa.Model.Purchase;
 import free.tech.jofrasa.R;
 import io.realm.Realm;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 
 /**
  * Created by root on 21-10-17.
@@ -38,7 +39,6 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     private static final int TYPE_PROVIDER = 1;
     private static final int TYPE_PRODUCT = 2;
     private static final int TYPE_PURCHASE = 3;
-    private static final int TYPE_FOOTER_DETAIL = 4;
     private static final String TAG = "AdapterNav";
 
     private Activity activity;
@@ -53,6 +53,11 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         realm = Realm.getDefaultInstance();
     }
 
+    public AdapterNav(List<RealmObject> itemList, Activity activity, Realm realm){
+        this.activity = activity;
+        this.itemList = itemList;
+        this.realm = realm;
+    }
     public AdapterNav(List<RealmObject> itemList, Activity activity, QueryRealm queryRealm,
                       UpdateCountShoppingCart updateCountShoppingCart){
         this.activity = activity;
@@ -136,7 +141,6 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                         break;
                     case R.id.button_car:
                         Log.e("Adapter", "button_car");
-                        final String ID = UUID.randomUUID().toString();
                         realm.executeTransactionAsync(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
@@ -164,6 +168,7 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                 }
                 break;
             case TYPE_PURCHASE:
+                final Purchase purchase = (Purchase) itemList.get(position);
                 switch (view.getId()){
                     case R.id.button_up:
                         Log.e("Adapter", "button_up");
@@ -173,6 +178,17 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                         break;
                     case R.id.button_delete:
                         Log.e("Adapter", "button_delete");
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                queryRealm = new QueryRealm(realm, activity);
+                                if (purchase.isValid()) {
+                                    purchase.deleteFromRealm();
+                                    CLear();
+                                    addAll(queryRealm.getListPurchases());
+                                } else Log.e("executeTransaction", "no valido");
+                            }
+                        });
                         break;
                 }
                 break;

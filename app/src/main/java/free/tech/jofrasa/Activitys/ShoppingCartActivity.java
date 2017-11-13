@@ -48,7 +48,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         if (queryRealm != null)
-            recyclerView.setAdapter(new AdapterNav(queryRealm.getListPurchases(), this));
+            recyclerView.setAdapter(new AdapterNav(queryRealm.getListPurchases(), this, realm));
 
     }
 

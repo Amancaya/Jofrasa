@@ -3,6 +3,7 @@ package free.tech.jofrasa.Activitys;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private SearchView searchView;
     private Realm realm;
     private QueryRealm queryRealm;
+    private CounterFab fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +47,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         queryRealm = new QueryRealm(realm, this);
         setSupportActionBar(toolbar);
         CallFragment();
-        CounterFab fab = (CounterFab) findViewById(R.id.fab);
-        fab.setCount(queryRealm.countCart());
+        fab = (CounterFab) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -61,6 +62,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.setCount(queryRealm.countCart());
     }
 
     @Override
