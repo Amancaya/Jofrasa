@@ -1,18 +1,48 @@
 package free.tech.jofrasa.Model;
 
+import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
+import io.realm.annotations.Required;
+
 /**
  * Created by root on 25-10-17.
  */
 
-public class Purchase {
+public class Purchase extends RealmObject{
+    @PrimaryKey
+    private String id;
+
+    private int idProduct;
     private String name;
     private int quantity;
     private double price;
+    private String photo;
 
-    public Purchase(String name, int quantity, double price) {
-        this.name = name;
-        this.quantity = quantity;
-        this.price = price;
+    public Purchase() {
+    }
+
+    public String getPhoto() {
+        return photo;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public int getIdProduct() {
+        return idProduct;
+    }
+
+    public void setIdProduct(int idProduct) {
+        this.idProduct = idProduct;
     }
 
     public String getName() {

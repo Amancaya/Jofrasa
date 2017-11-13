@@ -20,10 +20,12 @@ import android.widget.ImageView;
 import com.andremion.counterfab.CounterFab;
 
 
+import free.tech.jofrasa.ExtraClass.QueryRealm;
 import free.tech.jofrasa.Interface.MySendView;
 import free.tech.jofrasa.ExtraClass.MySearchView;
 import free.tech.jofrasa.Nav_central;
 import free.tech.jofrasa.R;
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
@@ -31,16 +33,20 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private Nav_central fragment;
     MySendView mySendView;
     private SearchView searchView;
+    private Realm realm;
+    private QueryRealm queryRealm;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
+        realm = Realm.getDefaultInstance();
+        queryRealm = new QueryRealm(realm, this);
         setSupportActionBar(toolbar);
         CallFragment();
         CounterFab fab = (CounterFab) findViewById(R.id.fab);
-        fab.setCount(6);
+        fab.setCount(queryRealm.countCart());
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+        // Handle action bar clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 

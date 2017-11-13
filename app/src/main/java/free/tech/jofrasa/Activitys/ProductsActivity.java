@@ -27,13 +27,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 import free.tech.jofrasa.Adapters.AdapterPager;
+import free.tech.jofrasa.ExtraClass.QueryRealm;
 import free.tech.jofrasa.Interface.MySendView;
+import free.tech.jofrasa.Interface.UpdateCountShoppingCart;
 import free.tech.jofrasa.Model.Provider;
 import free.tech.jofrasa.ExtraClass.MySearchView;
 import free.tech.jofrasa.Nav_central;
 import free.tech.jofrasa.R;
+import io.realm.Realm;
 
-public class ProductsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, TabLayout.OnTabSelectedListener {
+public class ProductsActivity extends AppCompatActivity implements SearchView.OnQueryTextListener, TabLayout.OnTabSelectedListener,
+                                    UpdateCountShoppingCart {
 
     private static final String TAG = "ProductsActivity";
     private static final String PROD_NAME = "name";
@@ -53,6 +57,8 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
     private Nav_central currentFragment;
     private int currentPosition = 0;
     private AdapterPager adapterPager;
+    private QueryRealm queryRealm;
+    private Realm realm;
 
     public static void createInstance(Activity activity, Provider provider){
         Intent intent = getLaunchIntent(activity, provider)
@@ -80,8 +86,11 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         fragmentList = new ArrayList<>();
         initCollapsingToolbar();
+        realm = Realm.getDefaultInstance();
+        queryRealm = new QueryRealm(realm, this);
         currentFragment = (Nav_central) fragmentList.get(0);
         counterFab = (CounterFab) findViewById(R.id.fab_product);
+        counterFab.setCount(queryRealm.countCart());
         imageView = (ImageView) findViewById(R.id.image);
         Picasso.with(this).load(provider.getImage()).placeholder(R.drawable.paloma).into(imageView);
 
@@ -227,5 +236,10 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
     public void CloseSearchView(){
         searchView.clearFocus();
         currentFragment.returnToTheValues();
+    }
+
+    @Override
+    public void UpdateCount(int quantity) {
+        counterFab.setCount(quantity);
     }
 }

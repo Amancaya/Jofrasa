@@ -25,4 +25,6 @@
     <string name="button_purchase">Enviar Solicitud</string>
     <string name="connection">Revise su conexión</string>
     <string name="error">Error al cargar los datos</string>
+    <string name="insert">insertado a carrito correctamente</string>
+    <string name="Notinsert">No inserto correctamente</string>
 </resources>

@@ -5,4 +5,5 @@ package free.tech.jofrasa.Interface;
  */
 
 public interface UpdateCountShoppingCart {
+    void UpdateCount(int quantity);
 }

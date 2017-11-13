@@ -3,11 +3,14 @@ package free.tech.jofrasa.Model;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import io.realm.Realm;
+import io.realm.RealmObject;
+
 /**
  * Created by root on 21-10-17.
  */
 
-public class Producto extends item {
+public class Producto extends RealmObject {
 
     @SerializedName("id")
     @Expose
