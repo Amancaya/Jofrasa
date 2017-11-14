@@ -7,9 +7,8 @@ import free.tech.jofrasa.Interface.ApiInterface;
  */
 
 public class ApiUtils {
-    private ApiUtils() {}
 
-    public static final String BASE_URL = "http://jsonplaceholder.typicode.com/";
+    private ApiUtils() {}
 
     public static ApiInterface getAPIService() {
 

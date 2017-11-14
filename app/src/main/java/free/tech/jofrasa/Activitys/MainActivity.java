@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
         realm = Realm.getDefaultInstance();
-        queryRealm = new QueryRealm(realm, this);
+        queryRealm = new QueryRealm(realm);
         setSupportActionBar(toolbar);
         CallFragment();
         fab = (CounterFab) findViewById(R.id.fab);

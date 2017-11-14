@@ -1,6 +1,7 @@
 package free.tech.jofrasa.Interface;
 
 import free.tech.jofrasa.ExtraClass.Model.Client;
+import free.tech.jofrasa.Model.Purchase;
 import free.tech.jofrasa.Response.ResponseProduct;
 import free.tech.jofrasa.Response.ResponseProvider;
 import retrofit2.Call;
@@ -31,4 +32,10 @@ public interface ApiInterface {
                           @Field("_adress") String _adress,
                           @Field("_cell_number") String _cell_number,
                           @Field("_phone_number") String _phone_number);
+
+    @POST("client/insertShopping/")
+    @FormUrlEncoded
+    Call<Purchase> saveProduct(@Field("_id_product") int _id_product,
+                          @Field("_nit") String _nit,
+                          @Field("_quantity") int _quantity);
 }
