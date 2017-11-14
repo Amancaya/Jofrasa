@@ -1,5 +1,6 @@
 package free.tech.jofrasa.Activitys;
 
+import android.content.Context;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +8,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TableRow.LayoutParams;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -49,6 +51,13 @@ public class ShoppingCartActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         if (queryRealm != null)
             recyclerView.setAdapter(new AdapterNav(queryRealm.getListPurchases(), this, realm));
+
+        //to hide the keyboard
+        View view = this.getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
 
     }
 

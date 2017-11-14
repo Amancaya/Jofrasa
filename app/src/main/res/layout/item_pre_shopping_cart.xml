@@ -57,7 +57,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/border_text"
-                    android:text="23"
                     android:textColor="@color/black"
                     android:textSize="20sp"
                     android:padding="10dp"

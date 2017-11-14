@@ -46,17 +46,19 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     private Realm realm;
     private QueryRealm queryRealm;
     private UpdateCountShoppingCart updateCountShoppingCart;
+    private RecyclerView.ViewHolder viewHolder = null;
 
     public AdapterNav(List<RealmObject> itemList, Activity activity){
         this.activity = activity;
         this.itemList = itemList;
-        realm = Realm.getDefaultInstance();
     }
 
     public AdapterNav(List<RealmObject> itemList, Activity activity, Realm realm){
         this.activity = activity;
         this.itemList = itemList;
         this.realm = realm;
+        queryRealm = new QueryRealm(realm, activity);
+
     }
     public AdapterNav(List<RealmObject> itemList, Activity activity, QueryRealm queryRealm,
                       UpdateCountShoppingCart updateCountShoppingCart){
@@ -94,7 +96,6 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(activity);
-        RecyclerView.ViewHolder viewHolder = null;
         switch (viewType){
             case TYPE_PROVIDER:
                 viewHolder = new ProviderHolder(inflater.inflate(R.layout.item_nav, parent, false), this, activity);
@@ -106,7 +107,6 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                 viewHolder = new PurchaseHolder(inflater.inflate(R.layout.item_pre_shopping_cart, parent, false), this, activity);
                 break;
         }
-
         return viewHolder;
     }
 
@@ -127,8 +127,12 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     }
 
 
+    private double reCaculatePrice(Purchase purchase){
+        return purchase.getPrice()/purchase.getQuantity();
+    }
+
     @Override
-    public void onItemClick(View view, int position) {
+    public void onItemClick(View view, final int position) {
         switch (getItemViewType(position)){
             case TYPE_PROVIDER:
                 ProductsActivity.createInstance(activity, (Provider)itemList.get(position)); break;
@@ -167,21 +171,43 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                         break;
                 }
                 break;
+
             case TYPE_PURCHASE:
                 final Purchase purchase = (Purchase) itemList.get(position);
                 switch (view.getId()){
                     case R.id.button_up:
-                        Log.e("Adapter", "button_up");
-                        break;
-                    case R.id.button_down:
-                        Log.e("Adapter", "button_down");
-                        break;
-                    case R.id.button_delete:
-                        Log.e("Adapter", "button_delete");
                         realm.executeTransaction(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
-                                queryRealm = new QueryRealm(realm, activity);
+                                int quantity = purchase.getQuantity();
+                                double price = reCaculatePrice(purchase);
+                                purchase.setQuantity(quantity+1);
+                                purchase.setPrice((quantity+1)*price);
+                                CLear();
+                                addAll(queryRealm.getListPurchases());
+                            }
+                        });
+                        break;
+                    case R.id.button_down:
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                int quantity = purchase.getQuantity();
+                                double price = reCaculatePrice(purchase);
+                                if (quantity > 1){
+                                    purchase.setQuantity(quantity-1);
+                                    purchase.setPrice((quantity-1)*price);
+                                }
+                                CLear();
+                                addAll(queryRealm.getListPurchases());
+                            }
+                        });
+                        break;
+                    case R.id.button_delete:
+
+                        realm.executeTransaction(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
                                 if (purchase.isValid()) {
                                     purchase.deleteFromRealm();
                                     CLear();
@@ -282,7 +308,7 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         ItemclickListener listener;
         Activity activity;
 
-        public PurchaseHolder(View itemView, ItemclickListener listener, Activity activity) {
+        PurchaseHolder(View itemView, ItemclickListener listener, Activity activity) {
             super(itemView);
             image_product = itemView.findViewById(R.id.image_product);
             button_up = itemView.findViewById(R.id.button_up);
@@ -308,12 +334,8 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
         private void binData(Purchase purchase){
             Picasso.with(activity).load(purchase.getPhoto()).into(image_product);
             name_product.setText(purchase.getName());
-            price_product.setText(String.valueOf(purchase.getPrice()));
+            price_product.setText("Bs "+String.valueOf(purchase.getPrice()));
             quantity_product.setText(String.valueOf(purchase.getQuantity()));
-        }
-
-        private void reCalculateValue(int quantity, double price){
-
         }
     }
 }
