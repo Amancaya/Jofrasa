@@ -23,6 +23,7 @@ import free.tech.jofrasa.ExtraClass.ImageDialog;
 import free.tech.jofrasa.ExtraClass.QueryRealm;
 import free.tech.jofrasa.Interface.ItemclickListener;
 import free.tech.jofrasa.Interface.UpdateCountShoppingCart;
+import free.tech.jofrasa.Interface.UpdateValues;
 import free.tech.jofrasa.Model.Producto;
 import free.tech.jofrasa.Model.Provider;
 import free.tech.jofrasa.Model.Purchase;
@@ -46,19 +47,19 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     private Realm realm;
     private QueryRealm queryRealm;
     private UpdateCountShoppingCart updateCountShoppingCart;
-    private RecyclerView.ViewHolder viewHolder = null;
+    private UpdateValues updateValues;
 
     public AdapterNav(List<RealmObject> itemList, Activity activity){
         this.activity = activity;
         this.itemList = itemList;
     }
 
-    public AdapterNav(List<RealmObject> itemList, Activity activity, Realm realm){
+    public AdapterNav(List<RealmObject> itemList, Activity activity, Realm realm, UpdateValues updateValues){
         this.activity = activity;
         this.itemList = itemList;
         this.realm = realm;
-        queryRealm = new QueryRealm(realm, activity);
-
+        this.updateValues = updateValues;//actualiza los datos de subtotal y total
+        queryRealm = new QueryRealm(realm);
     }
     public AdapterNav(List<RealmObject> itemList, Activity activity, QueryRealm queryRealm,
                       UpdateCountShoppingCart updateCountShoppingCart){
@@ -96,6 +97,7 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(activity);
+        RecyclerView.ViewHolder viewHolder = null;
         switch (viewType){
             case TYPE_PROVIDER:
                 viewHolder = new ProviderHolder(inflater.inflate(R.layout.item_nav, parent, false), this, activity);
@@ -185,6 +187,7 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                                 purchase.setPrice((quantity+1)*price);
                                 CLear();
                                 addAll(queryRealm.getListPurchases());
+                                updateValues.ChangeValues();
                             }
                         });
                         break;
@@ -200,6 +203,7 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                                 }
                                 CLear();
                                 addAll(queryRealm.getListPurchases());
+                                updateValues.ChangeValues();
                             }
                         });
                         break;
@@ -212,6 +216,7 @@ public class AdapterNav extends RecyclerView.Adapter<RecyclerView.ViewHolder> im
                                     purchase.deleteFromRealm();
                                     CLear();
                                     addAll(queryRealm.getListPurchases());
+                                    updateValues.ChangeValues();
                                 } else Log.e("executeTransaction", "no valido");
                             }
                         });

@@ -2,6 +2,7 @@ package free.tech.jofrasa.Activitys;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -27,6 +28,7 @@ import free.tech.jofrasa.ExtraClass.MySearchView;
 import free.tech.jofrasa.Nav_central;
 import free.tech.jofrasa.R;
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
@@ -34,7 +36,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private Nav_central fragment;
     MySendView mySendView;
     private SearchView searchView;
-    private Realm realm;
     private QueryRealm queryRealm;
     private CounterFab fab;
     @Override
@@ -43,16 +44,16 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
-        realm = Realm.getDefaultInstance();
-        queryRealm = new QueryRealm(realm, this);
+        Realm realm = Realm.getDefaultInstance();
+        queryRealm = new QueryRealm(realm);
         setSupportActionBar(toolbar);
         CallFragment();
         fab = (CounterFab) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent intent = new Intent(getApplication(), ShoppingCartActivity.class);
+                startActivity(intent);
             }
         });
 

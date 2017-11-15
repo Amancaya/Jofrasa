@@ -22,14 +22,10 @@ import io.realm.RealmResults;
  */
 
 public class QueryRealm {
-    private static final String TAG = "QueryRealm";
 
-    private RealmAsyncTask realmAsyncTask;
     private Realm realm;
-    private Activity activity;
-    public QueryRealm(Realm realm, Activity activity){
+    public QueryRealm(Realm realm){
        this.realm = realm;
-       this.activity = activity;
     }
 
     public Realm getRealm(){
@@ -42,48 +38,12 @@ public class QueryRealm {
         return objectList;
     }
 
-    public boolean UpdateQuantityData(int ID, final int quantity, final double price){
-        final boolean[] retornar = {false};
-        final Purchase purchaseUp = realm.where(Purchase.class).equalTo("idProduct", ID).findFirst();
-        realmAsyncTask = realm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                purchaseUp.setQuantity(quantity);
-                purchaseUp.setPrice(price);
-            }
-        }, new Realm.Transaction.OnSuccess() {
-            @Override
-            public void onSuccess() {
-                Log.e(TAG, "Actualizado correctamente");
-                retornar[0] = true;
-            }
-        }, new Realm.Transaction.OnError() {
-            @Override
-            public void onError(Throwable error) {
-                Log.e(TAG, "No Actualizo correctamente");
-                retornar[0] = false;
-            }
-        });
-
-        return retornar[0];
-    }
-
-    public boolean DeleteData(int ID){
-        Log.e("Query", "DeleteData");
-        RealmResults<Purchase> purchases = realm.where(Purchase.class).equalTo("idProduct", ID).findAll();
-        return  purchases.deleteAllFromRealm();
+    public boolean deleteAll(){
+        RealmResults<Purchase> realmResults = realm.where(Purchase.class).findAll();
+        return realmResults.deleteAllFromRealm();
     }
 
     public int countCart(){
         return (int) realm.where(Purchase.class).count();
-    }
-
-    public void CanceledAsyntask(){
-        if (realmAsyncTask != null){
-            if (!realmAsyncTask.isCancelled()){
-                realmAsyncTask.cancel();
-            }
-        }
-
     }
 }

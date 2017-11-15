@@ -14,7 +14,6 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.style.UpdateAppearance;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -27,11 +26,13 @@ import java.util.List;
 
 import dmax.dialog.SpotsDialog;
 import free.tech.jofrasa.Activitys.ProductsActivity;
+import free.tech.jofrasa.Activitys.ShoppingCartActivity;
 import free.tech.jofrasa.Adapters.AdapterNav;
 import free.tech.jofrasa.ExtraClass.ApiClient;
 import free.tech.jofrasa.ExtraClass.ExtraFunctions;
 import free.tech.jofrasa.ExtraClass.QueryRealm;
 import free.tech.jofrasa.Interface.UpdateCountShoppingCart;
+import free.tech.jofrasa.Interface.UpdateValues;
 import free.tech.jofrasa.Response.ResponseProduct;
 import free.tech.jofrasa.Response.ResponseProvider;
 import free.tech.jofrasa.Interface.ApiInterface;
@@ -54,6 +55,7 @@ public class Nav_central extends Fragment implements MySendView{
     public static final String PRODUCT_UNIQUE = "Prod Unitarios";
     public static final String PRODUCT_PACKAGE = "Prod Por paquete";
     public static final String MAIN = "MainActivity";
+    public static final String CART = "ShopingCart";
 
     private RecyclerView recyclerView;
     private AdapterNav adapterNav;
@@ -67,6 +69,7 @@ public class Nav_central extends Fragment implements MySendView{
     private Realm realm;
     private QueryRealm queryRealm;
     private UpdateCountShoppingCart updateCountShoppingCart;
+    private UpdateValues updateValues;
 
     static public Nav_central createInstance(String fragmentName, int idProvider){
         Nav_central nav_central = new Nav_central();
@@ -86,7 +89,7 @@ public class Nav_central extends Fragment implements MySendView{
         LoadDialog = new SpotsDialog(getActivity());
         LoadDialog.show();
         realm = Realm.getDefaultInstance();
-        queryRealm = new QueryRealm(realm, getActivity());
+        queryRealm = new QueryRealm(realm);
         idProvider = getArguments().getInt(TAG_ID, 0);
         apiInterface = ApiClient.getClient().create(ApiInterface.class);
         recyclerView = rootView.findViewById(R.id.recycler);
@@ -94,12 +97,6 @@ public class Nav_central extends Fragment implements MySendView{
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         LoadAllData();
         return rootView;
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        queryRealm.CanceledAsyntask();
     }
 
     @Override
@@ -113,12 +110,17 @@ public class Nav_central extends Fragment implements MySendView{
         super.onAttach(context);
         if (context instanceof ProductsActivity)
             updateCountShoppingCart = (UpdateCountShoppingCart) context;
+        else if (context instanceof ShoppingCartActivity)
+            updateValues = (UpdateValues) context;
     }
 
     private void LoadAllData(){
         switch (getArguments().getString(TAG)){
             case MAIN:
                 LoadMainDataServer();
+                break;
+            case CART:
+                LoadDataShoppingCart();
                 break;
             default:
                 LoadProductDataServer(getArguments().getString(TAG));
@@ -133,10 +135,10 @@ public class Nav_central extends Fragment implements MySendView{
     private void LoadDatainRecycler(String key){
         switch (key){
             case MAIN:
-                LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-                recyclerView.setLayoutManager(layoutManager);
-                adapterNav = new AdapterNav(itemList, getActivity());
-                recyclerView.setAdapter(adapterNav);
+                LoadRecyclerMainCart(MAIN);
+                break;
+            case CART:
+                LoadRecyclerMainCart(CART);
                 break;
             default:
                 LoadRecycLerProduct();
@@ -158,13 +160,27 @@ public class Nav_central extends Fragment implements MySendView{
         recyclerView.addItemDecoration(new GridSpacingItemDecoration(2, dpToPx(2), false));
     }
 
+    //Load simple recycler
+    private void LoadRecyclerMainCart(String tag){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        switch (tag){
+            case MAIN: adapterNav = new AdapterNav(itemList, getActivity());break;
+            case CART: adapterNav = new AdapterNav(itemList, getActivity(), realm, updateValues);
+        }
+
+        recyclerView.setAdapter(adapterNav);
+    }
+
     //return old values
     public void returnToTheValues(){
         String key = nav_central.getArguments().getString(Nav_central.TAG);
-        if (nav_central == null || key.equals(MAIN)){
+
+        if (key.equals(MAIN)){
             adapterNav.CLear();
             adapterNav.addAll(itemListMain);
-        }else {
+        }
+        else {
             switch (key){
                 case PRODUCT_PACKAGE:
                     adapterNav.CLear();
@@ -273,10 +289,7 @@ public class Nav_central extends Fragment implements MySendView{
                 @Override
                 public void onResponse(@NonNull Call<ResponseProvider> call, @NonNull retrofit2.Response<ResponseProvider> response) {
                     controlThreadRetrofit++;
-                    for (int i =0; i< response.body().getData().size(); i++){
-                        Provider provider = response.body().getData().get(i);
-                        itemList.add(provider);
-                    }
+                    itemList.addAll(response.body().getData());
                     itemListMain = itemList;
                     ShowList(MAIN);
                 }
@@ -291,6 +304,14 @@ public class Nav_central extends Fragment implements MySendView{
         }
     }
 
+    private void LoadDataShoppingCart(){
+        controlThreadRetrofit++;//sincroniza los hilos
+        itemList.addAll(queryRealm.getListPurchases());
+        ShowList(CART);
+    }
+
+    //call retrofit for data
+    //call products
     private void LoadProductDataServer(final String key){
         if (ExtraFunctions.Conexion(getActivity())){
             Call<ResponseProduct> responseProductCall = apiInterface.getProductCall(idProvider);
@@ -334,6 +355,10 @@ public class Nav_central extends Fragment implements MySendView{
             LoadDatainRecycler(key);
             LoadDialog.dismiss();
         }
+    }
+
+    public void ClearAdapterAndList(){
+        adapterNav.CLear();
     }
 }
 

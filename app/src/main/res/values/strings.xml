@@ -27,4 +27,9 @@
     <string name="error">Error al cargar los datos</string>
     <string name="insert">insertado a carrito correctamente</string>
     <string name="Notinsert">No inserto correctamente</string>
+    <string name="Subtotal">Subtotal:</string>
+    <string name="transport">Transporte:</string>
+    <string name="total">Total:</string>
+    <string name="buy">Enviar Solicitud</string>
+    <string name="delete">Elimina toda la lista</string>
 </resources>

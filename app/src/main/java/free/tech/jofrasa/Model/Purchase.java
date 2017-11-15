@@ -1,5 +1,8 @@
 package free.tech.jofrasa.Model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 import io.realm.annotations.Required;
@@ -11,15 +14,20 @@ import io.realm.annotations.Required;
 public class Purchase extends RealmObject{
     @PrimaryKey
     private String id;
-
+    @SerializedName("_id_product")
+    @Expose
     private int idProduct;
     private String name;
+    @SerializedName("_quantity")
+    @Expose
     private int quantity;
     private double price;
     private String photo;
 
     public Purchase() {
     }
+
+
 
     public String getPhoto() {
         return photo;
@@ -68,4 +76,5 @@ public class Purchase extends RealmObject{
     public void setPrice(double price) {
         this.price = price;
     }
+
 }

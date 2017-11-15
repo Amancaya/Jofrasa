@@ -87,7 +87,7 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
         fragmentList = new ArrayList<>();
         initCollapsingToolbar();
         realm = Realm.getDefaultInstance();
-        queryRealm = new QueryRealm(realm, this);
+        queryRealm = new QueryRealm(realm);
         currentFragment = (Nav_central) fragmentList.get(0);
         counterFab = (CounterFab) findViewById(R.id.fab_product);
         imageView = (ImageView) findViewById(R.id.image);
@@ -195,6 +195,7 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
 
         tabLayout.setupWithViewPager(viewPager);
     }
+
     private void LoadPagers(ViewPager viewPager){
         for(int i = 0; i< labels.length; i++){
             Nav_central nav_central = Nav_central.createInstance(labels[i], provider.getId());
