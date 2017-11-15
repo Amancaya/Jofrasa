@@ -14,13 +14,13 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.Map;
 
@@ -122,7 +122,7 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
     }
     private void setUserData(FirebaseUser user) {
         userEmail.setText(user.getEmail());
-        Glide.with(this).load(user.getPhotoUrl()).into(photoImageView);
+        Picasso.with(this).load(user.getPhotoUrl()).into(photoImageView);
     }
     private void goLogInScreen() {
         Intent intent = new Intent(this, RegistryActivity.class);

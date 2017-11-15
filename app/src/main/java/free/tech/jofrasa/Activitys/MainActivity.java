@@ -3,6 +3,7 @@ package free.tech.jofrasa.Activitys;
 import android.app.SearchManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -20,27 +21,33 @@ import android.widget.ImageView;
 import com.andremion.counterfab.CounterFab;
 
 
-import free.tech.jofrasa.Interface.SendView;
+import free.tech.jofrasa.ExtraClass.QueryRealm;
+import free.tech.jofrasa.Interface.MySendView;
 import free.tech.jofrasa.ExtraClass.MySearchView;
 import free.tech.jofrasa.Nav_central;
 import free.tech.jofrasa.R;
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener{
 
     private static final String TAG = "Main";
     private Nav_central fragment;
-    SendView sendView;
+    MySendView mySendView;
     private SearchView searchView;
+    private Realm realm;
+    private QueryRealm queryRealm;
+    private CounterFab fab;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("");
+        realm = Realm.getDefaultInstance();
+        queryRealm = new QueryRealm(realm, this);
         setSupportActionBar(toolbar);
         CallFragment();
-        CounterFab fab = (CounterFab) findViewById(R.id.fab);
-        fab.setCount(6);
+        fab = (CounterFab) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,6 +62,12 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 return true;
             }
         });
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.setCount(queryRealm.countCart());
     }
 
     @Override
@@ -84,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
+        // Handle action bar clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
 
@@ -102,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public void onAttachFragment(Fragment fragment) {
         super.onAttachFragment(fragment);
-        sendView = (SendView) fragment;
+        mySendView = (MySendView) fragment;
     }
 
 
@@ -132,7 +145,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     @Override
     public boolean onQueryTextChange(String newText) {
         if (fragment != null){
-            sendView.filter(fragment.getAdapterNavListItem(), newText, fragment);
+            mySendView.filter(fragment.getAdapterNavListItem(), newText, fragment);
         }
         return true;
     }

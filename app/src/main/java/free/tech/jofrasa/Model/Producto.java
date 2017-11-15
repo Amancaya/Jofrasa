@@ -1,90 +1,70 @@
 package free.tech.jofrasa.Model;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import io.realm.Realm;
+import io.realm.RealmObject;
+
 /**
  * Created by root on 21-10-17.
  */
 
-public class Producto extends item {
-    private int id;
-    private String product_name;
-    private double price;
-    private double package_price;
-    private int package_quantity;
-    private int photo;
-    private int id_provider;
+public class Producto extends RealmObject {
 
+    @SerializedName("id")
+    @Expose
+    private Integer id;
+    @SerializedName("product_name")
+    @Expose
+    private String productName;
+    @SerializedName("price")
+    @Expose
+    private String price;
+    @SerializedName("package_quantity")
+    @Expose
+    private Integer packageQuantity;
+    @SerializedName("photo")
+    @Expose
+    private String photo;
 
-    public Producto() {
-    }
-
-    public Producto(int id, String product_name, double package_price, int package_quantity, int photo) {
-        this.id = id;
-        this.product_name = product_name;
-        this.package_price = package_price;
-        this.package_quantity = package_quantity;
-        this.photo = photo;
-    }
-
-    public Producto(int id, String product_name, double price, int photo) {
-        this.id = id;
-        this.product_name = product_name;
-        this.price = price;
-        this.photo = photo;
-    }
-
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
-    public String getProduct_name() {
-        return product_name;
+    public String getProductName() {
+        return productName;
     }
 
-    public void setProduct_name(String product_name) {
-        this.product_name = product_name;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public double getPrice() {
+    public String getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(String price) {
         this.price = price;
     }
 
-    public double getPackage_price() {
-        return package_price;
+    public Integer getPackageQuantity() {
+        return packageQuantity;
     }
 
-    public void setPackage_price(double package_price) {
-        this.package_price = package_price;
+    public void setPackageQuantity(Integer packageQuantity) {
+        this.packageQuantity = packageQuantity;
     }
 
-    public int getPackage_quantity() {
-        return package_quantity;
-    }
-
-    public void setPackage_quantity(int package_quantity) {
-        this.package_quantity = package_quantity;
-    }
-
-    public int getPhoto() {
+    public String getPhoto() {
         return photo;
     }
 
-    public void setPhoto(int photo) {
+    public void setPhoto(String photo) {
         this.photo = photo;
-    }
-
-    public int getId_provider() {
-        return id_provider;
-    }
-
-    public void setId_provider(int id_provider) {
-        this.id_provider = id_provider;
     }
 }

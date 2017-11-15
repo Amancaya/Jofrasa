@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/layout_total"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+
+        <ImageView
+            android:id="@+id/image_product"
+            android:layout_width="80dp"
+            android:layout_height="100dp"
+            android:scaleType="centerInside"
+            android:src="@drawable/yacobs_ciruela"
+            android:layout_gravity="center"/>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp">
+
+            <TextView
+                android:id="@+id/name_product"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="OLA Lava Vajilla LimaLimon Brillo 12x600mL"
+                android:textColor="@color/black"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/price_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/name_product"
+                android:text="Bs 150.98"
+                android:textColor="@color/colorAccent"
+                android:textStyle="bold"
+                android:textSize="24sp"
+                android:layout_marginTop="5dp"/>
+
+            <LinearLayout
+                android:id="@+id/layout_quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_below="@id/price_product"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="5dp">
+
+                <EditText
+                    android:id="@+id/quantity_product"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border_text"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:padding="10dp"
+                    android:enabled="false"
+                    android:lines="1"/>
+
+
+                <RelativeLayout
+                    android:layout_width="30dp"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/button_up"
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_arrow_up"
+                        android:background="@drawable/border_text"/>
+
+                    <ImageView
+                        android:id="@+id/button_down"
+                        android:layout_width="match_parent"
+                        android:layout_height="25dp"
+                        android:src="@drawable/ic_arrow_down"
+                        android:layout_below="@id/button_up"
+                        android:background="@drawable/border_text"/>
+
+                </RelativeLayout>
+
+
+                <ImageView
+                    android:id="@+id/button_delete"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/ic_delete"
+                    android:layout_marginStart="50dp"
+                    android:layout_gravity="center_vertical"/>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/divider"
+        android:layout_below="@id/layout_total"
+        android:layout_marginTop="10dp"/>
+
+</RelativeLayout>
