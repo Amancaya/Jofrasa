@@ -2,6 +2,7 @@ package free.tech.jofrasa.Activitys;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -31,11 +32,15 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private Nav_central fragment;
     SendView sendView;
     private SearchView searchView;
+    //shared preference
+    SharedPreferences sharedpreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        sharedpreferences = getSharedPreferences("mypreference",
+                Context.MODE_PRIVATE);
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
         CallFragment();
@@ -55,6 +60,8 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 return true;
             }
         });
+
+        getSharedpreferences();
     }
 
     @Override
@@ -93,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if (R.id.out == id){
             finish();
         }else if (R.id.log_out == id){
+            Log.i("Main", id+" id log_out ");
             Log.e("Main", "LogOut");
         }
         return super.onOptionsItemSelected(item);
@@ -142,4 +150,19 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         searchView.clearFocus();
         fragment.returnToTheValues();
     }
+    public void getSharedpreferences() {
+
+        sharedpreferences = getSharedPreferences("mypreference",
+                Context.MODE_PRIVATE);
+            Log.i("SHARED ",sharedpreferences.getAll()+"");
+
+//        if (sharedpreferences.contains(Name)) {
+//            name.setText(sharedpreferences.getString(Name, ""));
+//        }
+//        if (sharedpreferences.contains(Email)) {
+//            email.setText(sharedpreferences.getString(Email, ""));
+//
+//        }
+    }
+
 }

@@ -15,12 +15,12 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="0.4">
+            android:layout_weight="0.35">
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@drawable/logo"
-                android:layout_marginTop="100dp"/>
+                android:src="@drawable/jofrasa"
+                android:layout_marginTop="140dp"/>
 
         </RelativeLayout>
         <ScrollView
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:layout_marginTop="50dp"/>
+                    android:layout_marginTop="80dp"/>
 
                 <ProgressBar
                     android:id="@+id/progressBar"

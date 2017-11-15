@@ -1,6 +1,8 @@
 package free.tech.jofrasa.Activitys;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -55,6 +57,8 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
     private ApiInterface mApiService;
     //model CLient
     private Client client;
+    //shared preference
+    SharedPreferences sharedpreferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +77,9 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
         //layout registry
         formRegistry = (LinearLayout) findViewById(R.id.form_registry);
         progressBar = (ProgressBar) findViewById(R.id.progressBar);
+        //sharedpreferences
+        sharedpreferences = getSharedPreferences("mypreference",
+                Context.MODE_PRIVATE);
 
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -157,7 +164,7 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
         startActivity(intent);
     }
 
-    public void sendPost(Client client) {
+    public void sendPost(final Client client) {
         progressBar.setVisibility(View.VISIBLE);
         mApiService.savePost(client).enqueue(new Callback<Client>() {
             @Override
@@ -167,6 +174,7 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
                 if (response.isSuccessful()) {
                     Log.i("REGISTRY ", "post submitted to API." + response.body().getData());
                     if (response.body().getData().equals("Usuario insertado correctamente")) {
+                        saveSharedPreferent(client);
                         goMainScreen();
                         Toast.makeText(getApplicationContext(),R.string.success_registry,Toast.LENGTH_SHORT).show();
                     } else {
@@ -238,6 +246,23 @@ public class RegistryActivity extends AppCompatActivity implements GoogleApiClie
 
         @Override
         final public void onTextChanged(CharSequence s, int start, int before, int count) { /* Don't care */ }
+    }
+
+    public void saveSharedPreferent( Client client) {
+        String name = client.getName().toString();
+        String surname = client.getSurname().toString();
+        String nit = client.getNit().toString();
+        String email = client.getEmail().toString();
+        String cell_number = client.getCellNumber().toString();
+        String phone_number = client.getPhoneNumber().toString();
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        editor.putString("name", name);
+        editor.putString("surname", surname);
+        editor.putString("nit", nit);
+        editor.putString("email", email);
+        editor.putString("cell_number", cell_number);
+        editor.putString("phone_number", phone_number);
+        editor.commit();
     }
 
     private void goMainScreen() {
