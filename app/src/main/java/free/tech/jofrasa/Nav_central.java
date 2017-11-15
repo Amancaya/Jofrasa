@@ -175,11 +175,10 @@ public class Nav_central extends Fragment implements MySendView{
     //return old values
     public void returnToTheValues(){
         String key = nav_central.getArguments().getString(Nav_central.TAG);
-        if (nav_central == null || key.equals(MAIN)){
+
+        if (key.equals(MAIN)){
             adapterNav.CLear();
             adapterNav.addAll(itemListMain);
-        }else if (nav_central == null || key.equals(CART)){
-            adapterNav.CLear();
         }
         else {
             switch (key){
@@ -356,6 +355,10 @@ public class Nav_central extends Fragment implements MySendView{
             LoadDatainRecycler(key);
             LoadDialog.dismiss();
         }
+    }
+
+    public void ClearAdapterAndList(){
+        adapterNav.CLear();
     }
 }
 

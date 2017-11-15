@@ -31,5 +31,5 @@
     <string name="transport">Transporte:</string>
     <string name="total">Total:</string>
     <string name="buy">Enviar Solicitud</string>
-    <string name="delete">Delete All</string>
+    <string name="delete">Elimina toda la lista</string>
 </resources>

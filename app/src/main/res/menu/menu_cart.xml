@@ -6,10 +6,9 @@
 
     <item
         android:id="@+id/delete"
-        android:icon="@drawable/ic_delete"
+        android:icon="@drawable/ic_delete_white"
         android:orderInCategory="100"
         android:title="@string/delete"
-        android:iconTint="@color/icons"
         app:showAsAction="ifRoom"/>
 
 </menu>

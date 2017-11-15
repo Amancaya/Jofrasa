@@ -1,6 +1,7 @@
 package free.tech.jofrasa.Activitys;
 
 import android.app.Fragment;
+import android.content.Context;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -71,6 +73,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
         CalculateValues();
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_cart, menu);
@@ -81,7 +84,14 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.delete){
-            Log.e(TAG, "Pressed delete");
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.delete(Purchase.class);
+                    fragment.ClearAdapterAndList();
+                    CalculateValues();
+                }
+            });
         }
 
         return super.onOptionsItemSelected(item);
