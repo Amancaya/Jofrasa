@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.andremion.counterfab.CounterFab;
@@ -136,6 +137,11 @@ public class ProductsActivity extends AppCompatActivity implements SearchView.On
         searchView.setIconifiedByDefault(true);
         searchItem.setActionView(searchView);
         searchView.SetPosition(currentPosition);
+
+        //text color of searchView
+        EditText searchEditText = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.icons));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.icons));
 
         ImageView closeButton = searchView.findViewById(R.id.search_close_btn);
 

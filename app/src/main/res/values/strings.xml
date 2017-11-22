@@ -32,4 +32,6 @@
     <string name="total">Total:</string>
     <string name="buy">Enviar Solicitud</string>
     <string name="delete">Elimina toda la lista</string>
+    <string name="error_registry">Error, email ya registrado!</string>
+    <string name="success_registry">Datos almacenados correctamente</string>
 </resources>

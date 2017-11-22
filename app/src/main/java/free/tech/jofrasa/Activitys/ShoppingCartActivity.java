@@ -1,7 +1,9 @@
 package free.tech.jofrasa.Activitys;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +20,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import free.tech.jofrasa.Adapters.AdapterNav;
 import free.tech.jofrasa.ExtraClass.ApiUtils;
 import free.tech.jofrasa.ExtraClass.QueryRealm;
@@ -42,6 +45,8 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
     private ApiInterface mApiService;
     private int controlThread;
     private Nav_central fragment;
+    SharedPreferences sharedpreferences;
+    private AlertDialog dialogProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,6 +57,8 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
         realm = Realm.getDefaultInstance();
         queryRealm = new QueryRealm(realm);
 
+        dialogProgress = new SpotsDialog(this, "Enviando Solicitud");
+
         controlThread = 0;
         mApiService = mApiService = ApiUtils.getAPIService();
 
@@ -59,18 +66,22 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
         total = (TextView) findViewById(R.id.total);
         send = (Button) findViewById(R.id.send);
 
+
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 for (RealmObject realmObject: queryRealm.getListPurchases()) {
                     Purchase purchase = (Purchase) realmObject;
-                    SendProducts(purchase.getIdProduct(), "12345", purchase.getQuantity());
+                    dialogProgress.show();
+                    SendProducts(purchase.getIdProduct(), getSharedpreferences(), purchase.getQuantity());
                 }
             }
         });
 
         CAll4Fragment();
         CalculateValues();
+
     }
 
 
@@ -84,14 +95,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.delete){
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.delete(Purchase.class);
-                    fragment.ClearAdapterAndList();
-                    CalculateValues();
-                }
-            });
+            DeleteAllProducts();
         }
 
         return super.onOptionsItemSelected(item);
@@ -154,7 +158,36 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
 
     private synchronized void ShowList(){
         if (controlThread == queryRealm.getListPurchases().size()) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.delete(Purchase.class);
+                    fragment.ClearAdapterAndList();
+                    CalculateValues();
+                }
+            });
+            dialogProgress.dismiss();
             Toast.makeText(this, "Solicitud enviada correctamente", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public String getSharedpreferences() {
+        String strNit = "";
+        sharedpreferences = getSharedPreferences("mypreference",
+                Context.MODE_PRIVATE);
+//        Log.i("SHARED shoping ",sharedpreferences.getString("nit","no existe nit")+"");
+        strNit = sharedpreferences.getString("nit","no existe nit");
+        return strNit;
+    }
+
+    private void DeleteAllProducts(){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.delete(Purchase.class);
+                fragment.ClearAdapterAndList();
+                CalculateValues();
+            }
+        });
     }
 }

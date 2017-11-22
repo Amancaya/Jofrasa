@@ -35,14 +35,15 @@
             android:id="@+id/price"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/count"
+            android:layout_below="@+id/title"
+            android:layout_toEndOf="@+id/count"
             android:paddingLeft="@dimen/album_title_padding"
             android:paddingRight="@dimen/album_title_padding"
             android:paddingTop="3dp"
+            android:text="@string/pesos"
             android:textColor="@color/colorAccent"
             android:textSize="24sp"
-            android:textStyle="bold"
-            android:text="@string/pesos"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/count"
