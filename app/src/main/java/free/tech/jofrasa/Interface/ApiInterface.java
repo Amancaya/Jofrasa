@@ -5,6 +5,7 @@ import free.tech.jofrasa.Model.Purchase;
 import free.tech.jofrasa.Response.ResponseProduct;
 import free.tech.jofrasa.Response.ResponseProvider;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
@@ -24,6 +25,7 @@ public interface ApiInterface {
     Call<ResponseProduct> getProductCall(@Path("providerId") int id);
 
     @POST("client/insertClient/")
+<<<<<<< HEAD
     @FormUrlEncoded
     Call<Client> savePost(@Field("_name") String _name,
                           @Field("_surname") String _surname,
@@ -38,4 +40,11 @@ public interface ApiInterface {
     Call<Purchase> saveProduct(@Field("_id_product") int _id_product,
                           @Field("_nit") String _nit,
                           @Field("_quantity") int _quantity);
+=======
+    Call<Client> savePost(@Body Client client);
+
+    @GET("client/verifyEmail/{email}")
+    Call<Client> verifyEmail(@Path("email") String email);
+
+>>>>>>> issue5_Registry
 }

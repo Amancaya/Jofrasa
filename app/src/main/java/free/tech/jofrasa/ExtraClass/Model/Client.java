@@ -29,6 +29,15 @@ public class Client {
     @SerializedName("_phone_number")
     @Expose
     private String phoneNumber;
+    @SerializedName("data")
+    @Expose
+    private String data;
+    @SerializedName("error")
+    @Expose
+    private String error;
+    @SerializedName("response")
+    @Expose
+    private Boolean response;
 
     public String getName() {
         return name;
@@ -78,25 +87,45 @@ public class Client {
         this.cellNumber = cellNumber;
     }
 
-    @Override
-    public String toString() {
-        return "Client{" +
-                "name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", nit='" + nit + '\'' +
-                ", email='" + email + '\'' +
-                ", adress='" + adress + '\'' +
-                ", cellNumber='" + cellNumber + '\'' +
-                ", phoneNumber='" + phoneNumber + '\'' +
-                '}';
-    }
-
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public void setData(String data) {
+        this.data = data;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                " data='" + data + '\'' +
+                ", error='" + error + '\'' +
+                ", response=" + response +
+                '}';
+    }
+
+    public void setError(String error) {
+        this.error = error;
+    }
+
+    public Boolean getResponse() {
+        return response;
+    }
+
+    public void setResponse(Boolean response) {
+        this.response = response;
     }
 
 }

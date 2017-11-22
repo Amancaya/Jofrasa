@@ -2,6 +2,7 @@ package free.tech.jofrasa.Activitys;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,6 +43,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
     private ApiInterface mApiService;
     private int controlThread;
     private Nav_central fragment;
+    SharedPreferences sharedpreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +61,8 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
         total = (TextView) findViewById(R.id.total);
         send = (Button) findViewById(R.id.send);
 
+
+
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -71,6 +75,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
 
         CAll4Fragment();
         CalculateValues();
+        getSharedpreferences();
     }
 
 
@@ -156,5 +161,11 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
         if (controlThread == queryRealm.getListPurchases().size()) {
             Toast.makeText(this, "Solicitud enviada correctamente", Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void getSharedpreferences() {
+        sharedpreferences = getSharedPreferences("mypreference",
+                Context.MODE_PRIVATE);
+        Log.i("SHARED ",sharedpreferences.getString("nit","no existe nit")+"");
     }
 }

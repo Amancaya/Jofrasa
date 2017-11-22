@@ -16,6 +16,16 @@ public class ResponseProvider {
     @SerializedName("data")
     @Expose
     private List<Provider> data = null;
+
+    @Override
+    public String toString() {
+        return "Response{" +
+                "data=" + data +
+                ", error='" + error + '\'' +
+                ", response=" + response +
+                '}';
+    }
+
     @SerializedName("error")
     @Expose
     private String error;
