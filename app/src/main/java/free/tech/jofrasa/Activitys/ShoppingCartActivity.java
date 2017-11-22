@@ -68,14 +68,14 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
             public void onClick(View view) {
                 for (RealmObject realmObject: queryRealm.getListPurchases()) {
                     Purchase purchase = (Purchase) realmObject;
-                    SendProducts(purchase.getIdProduct(), "12345", purchase.getQuantity());
+                    SendProducts(purchase.getIdProduct(), getSharedpreferences(), purchase.getQuantity());
                 }
             }
         });
 
         CAll4Fragment();
         CalculateValues();
-        getSharedpreferences();
+
     }
 
 
@@ -163,9 +163,12 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
         }
     }
 
-    public void getSharedpreferences() {
+    public String getSharedpreferences() {
+        String strNit = "";
         sharedpreferences = getSharedPreferences("mypreference",
                 Context.MODE_PRIVATE);
-        Log.i("SHARED ",sharedpreferences.getString("nit","no existe nit")+"");
+//        Log.i("SHARED shoping ",sharedpreferences.getString("nit","no existe nit")+"");
+        strNit = sharedpreferences.getString("nit","no existe nit");
+        return strNit;
     }
 }

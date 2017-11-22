@@ -25,26 +25,16 @@ public interface ApiInterface {
     Call<ResponseProduct> getProductCall(@Path("providerId") int id);
 
     @POST("client/insertClient/")
-<<<<<<< HEAD
-    @FormUrlEncoded
-    Call<Client> savePost(@Field("_name") String _name,
-                          @Field("_surname") String _surname,
-                          @Field("_nit") String _nit,
-                          @Field("_email") String _email,
-                          @Field("_adress") String _adress,
-                          @Field("_cell_number") String _cell_number,
-                          @Field("_phone_number") String _phone_number);
+    Call<Client> savePost(@Body Client client);
 
     @POST("client/insertShopping/")
     @FormUrlEncoded
     Call<Purchase> saveProduct(@Field("_id_product") int _id_product,
                           @Field("_nit") String _nit,
                           @Field("_quantity") int _quantity);
-=======
-    Call<Client> savePost(@Body Client client);
+
 
     @GET("client/verifyEmail/{email}")
     Call<Client> verifyEmail(@Path("email") String email);
 
->>>>>>> issue5_Registry
 }

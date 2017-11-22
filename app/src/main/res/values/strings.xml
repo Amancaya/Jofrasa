@@ -25,7 +25,6 @@
     <string name="button_purchase">Enviar Solicitud</string>
     <string name="connection">Revise su conexión</string>
     <string name="error">Error al cargar los datos</string>
-<<<<<<< HEAD
     <string name="insert">insertado a carrito correctamente</string>
     <string name="Notinsert">No inserto correctamente</string>
     <string name="Subtotal">Subtotal:</string>
@@ -33,8 +32,6 @@
     <string name="total">Total:</string>
     <string name="buy">Enviar Solicitud</string>
     <string name="delete">Elimina toda la lista</string>
-=======
     <string name="error_registry">Error, email ya registrado!</string>
     <string name="success_registry">Datos almacenados correctamente</string>
->>>>>>> issue5_Registry
 </resources>
