@@ -1,5 +1,6 @@
 package free.tech.jofrasa.Activitys;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import java.util.List;
 
+import dmax.dialog.SpotsDialog;
 import free.tech.jofrasa.Adapters.AdapterNav;
 import free.tech.jofrasa.ExtraClass.ApiUtils;
 import free.tech.jofrasa.ExtraClass.QueryRealm;
@@ -44,6 +46,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
     private int controlThread;
     private Nav_central fragment;
     SharedPreferences sharedpreferences;
+    private AlertDialog dialogProgress;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +56,8 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
 
         realm = Realm.getDefaultInstance();
         queryRealm = new QueryRealm(realm);
+
+        dialogProgress = new SpotsDialog(this, "Enviando Solicitud");
 
         controlThread = 0;
         mApiService = mApiService = ApiUtils.getAPIService();
@@ -68,6 +73,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
             public void onClick(View view) {
                 for (RealmObject realmObject: queryRealm.getListPurchases()) {
                     Purchase purchase = (Purchase) realmObject;
+                    dialogProgress.show();
                     SendProducts(purchase.getIdProduct(), getSharedpreferences(), purchase.getQuantity());
                 }
             }
@@ -89,14 +95,7 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.delete){
-            realm.executeTransaction(new Realm.Transaction() {
-                @Override
-                public void execute(Realm realm) {
-                    realm.delete(Purchase.class);
-                    fragment.ClearAdapterAndList();
-                    CalculateValues();
-                }
-            });
+            DeleteAllProducts();
         }
 
         return super.onOptionsItemSelected(item);
@@ -159,6 +158,15 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
 
     private synchronized void ShowList(){
         if (controlThread == queryRealm.getListPurchases().size()) {
+            realm.executeTransaction(new Realm.Transaction() {
+                @Override
+                public void execute(Realm realm) {
+                    realm.delete(Purchase.class);
+                    fragment.ClearAdapterAndList();
+                    CalculateValues();
+                }
+            });
+            dialogProgress.dismiss();
             Toast.makeText(this, "Solicitud enviada correctamente", Toast.LENGTH_LONG).show();
         }
     }
@@ -170,5 +178,16 @@ public class ShoppingCartActivity extends AppCompatActivity implements UpdateVal
 //        Log.i("SHARED shoping ",sharedpreferences.getString("nit","no existe nit")+"");
         strNit = sharedpreferences.getString("nit","no existe nit");
         return strNit;
+    }
+
+    private void DeleteAllProducts(){
+        realm.executeTransaction(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                realm.delete(Purchase.class);
+                fragment.ClearAdapterAndList();
+                CalculateValues();
+            }
+        });
     }
 }

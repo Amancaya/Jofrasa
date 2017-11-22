@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.ImageView;
 
 
@@ -91,6 +92,10 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         searchView.setIconifiedByDefault(true);
         searchItem.setActionView(searchView);
 
+        EditText searchEditText = searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
+        searchEditText.setTextColor(getResources().getColor(R.color.icons));
+        searchEditText.setHintTextColor(getResources().getColor(R.color.icons));
+
         ImageView closeButton = searchView.findViewById(R.id.search_close_btn);
 
         closeButton.setOnClickListener(new View.OnClickListener() {
@@ -100,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 hideKeyboard();
             }
         });
+
         return true;
     }
 
@@ -108,8 +114,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         // Handle action bar clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-
-
+        Log.e(TAG, "onOptionsItemSelected");
         int id = item.getItemId();
         if (R.id.out == id){
             finish();
@@ -117,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
             Log.i("Main", id+" id log_out ");
             Log.e("Main", "LogOut");
         }
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
 
@@ -126,7 +131,6 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onAttachFragment(fragment);
         mySendView = (MySendView) fragment;
     }
-
 
     private void hideKeyboard() {
         View view = this.getCurrentFocus();
@@ -164,6 +168,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         searchView.clearFocus();
         fragment.returnToTheValues();
     }
+
     public void getSharedpreferences() {
         sharedpreferences = getSharedPreferences("mypreference",
                 Context.MODE_PRIVATE);
