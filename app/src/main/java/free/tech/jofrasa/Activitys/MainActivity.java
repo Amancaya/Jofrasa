@@ -116,12 +116,11 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         // as you specify a parent activity in AndroidManifest.xml.
         Log.e(TAG, "onOptionsItemSelected");
         int id = item.getItemId();
-        switch (id){
-            case R.id.log_out:
-                Log.e(TAG, "LogOut");
-                break;
-            default:
-                return super.onOptionsItemSelected(item);
+        if (R.id.out == id){
+            finish();
+        }else if (R.id.log_out == id){
+            Log.i("Main", id+" id log_out ");
+            Log.e("Main", "LogOut");
         }
         return true;
     }
